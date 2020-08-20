@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" id="mainBorderPane"
+            fx:controller="controller.CreditsController" stylesheets="@styles/Credits.css, @styles/Buttons.css">
+    <top>
+        <VBox alignment="TOP_CENTER">
+            <Label id="creditsLabel" text="Credits">
+                <VBox.margin>
+                    <Insets top="75"/>
+                </VBox.margin>
+            </Label>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="30" id="namesVBox">
+            <BorderPane.margin>
+                <Insets top="80"/>
+            </BorderPane.margin>
+
+            <Label text="Mert Duman"/>
+            <Label text="Burak Yaşar"/>
+            <Label text="Mert Alp Taytak"/>
+            <Label text="Görkem Yılmaz"/>
+            <Label text="Hikmet Demir"/>
+        </VBox>
+    </center>
+
+    <bottom>
+        <VBox alignment="BOTTOM_LEFT">
+            <Button text="Main Menu" fx:id="mainMenuBtn" onAction="#backToMainMenu">
+                <VBox.margin>
+                    <Insets top="40" left="40" right="40" bottom="40"/>
+                </VBox.margin>
+            </Button>
+        </VBox>
+    </bottom>
+</BorderPane>

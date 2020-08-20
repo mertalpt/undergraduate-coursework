@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" id="mainBorderPane"
+            fx:controller="controller.HowToPlayController" stylesheets="@styles/HowToPlay.css, @styles/Buttons.css"
+            prefHeight="400.0" prefWidth="600.0">
+    <top>
+        <VBox alignment="CENTER">
+            <Label id="howToPlayLabel" text="How To Play">
+                <VBox.margin>
+                    <Insets top="75"/>
+                </VBox.margin>
+            </Label>
+        </VBox>
+    </top>
+
+    <center>
+        <HBox alignment="CENTER">
+            <TextArea fx:id="textArea" id="contentBox" editable="false" wrapText="true">
+                <HBox.margin>
+                    <Insets top="30"/>
+                </HBox.margin>
+            </TextArea>
+        </HBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="BOTTOM_LEFT">
+            <Button text="Main Menu" fx:id="mainMenuBtn" onAction="#backToMainMenu">
+                <HBox.margin>
+                    <Insets top="40" left="40" right="40" bottom="40"/>
+                </HBox.margin>
+            </Button>
+
+            <Region prefHeight="100" prefWidth="100" HBox.hgrow="ALWAYS"/>
+
+            <HBox spacing="20" alignment="CENTER" id="contentBox">
+                <Label text="Info: "/>
+                <ComboBox fx:id="gameModesComboBox" value="General" maxWidth="400" minWidth="400">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="General"/>
+                            <String fx:value="Multiplayer"/>
+                            <String fx:value="Pattern Matching"/>
+                            <String fx:value="From Memory"/>
+                            <String fx:value="Against Time"/>
+                            <String fx:value="Painting Puzzle"/>
+                            <String fx:value="Two vs Two"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </HBox>
+
+            <Region prefHeight="100" prefWidth="600" HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </bottom>
+</BorderPane>

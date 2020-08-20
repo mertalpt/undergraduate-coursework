@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns="http://javafx.com/javafx" id="mainBorderPane"
+            xmlns:fx="http://javafx.com/fxml" fx:id="mainBorderPane"
+            stylesheets="@styles/End.css, @styles/Buttons.css">
+
+    <top>
+        <HBox alignment="CENTER">
+            <BorderPane.margin>
+                <Insets top="75"/>
+            </BorderPane.margin>
+            <Label fx:id="endGameFirstLetter" id="endGameFirstLetter"/>
+            <Label fx:id="endGameLabel" id="endGameLabel"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER" spacing="30">
+            <Label fx:id="finishedText" id="finishedText" text="You finished in: "/>
+            <Button fx:id="restartBtn" text="Restart" onAction="#restart"/>
+            <Button fx:id="gameOptionsBtn" text="Game Options" onAction="#loadGameOptions"/>
+            <Button fx:id="mainMenuBtn" text="Back To Main Menu" onAction="#backToMainMenu"/>
+        </VBox>
+    </center>
+</BorderPane>

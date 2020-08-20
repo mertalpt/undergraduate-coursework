@@ -1,0 +1,351 @@
+<!-- Author: Mert Alp Taytak - 21602061 -->
+
+<!DOCTYPE html>
+<META charset="utf-8"/>
+<html>
+    <head>
+        <title>
+            Implementation of Realistic Rendering 
+            Techniques on Parametric Superquadric Surfaces
+        </title>
+
+        <style>
+            body {
+                background-color: silver;
+            }
+        </style>
+    </head>
+    <body>
+        <!--  
+            Shaders
+        -->
+
+        <!-- Wireframe Vertex Shader -->
+        <script id="wireframe_v_shader" type="x-shader/x-vertex">
+            attribute vec4 vPos;
+
+            uniform mat4 modelViewMatrix;
+            uniform mat4 projectionMatrix;
+
+            void main() {
+                gl_Position = projectionMatrix * modelViewMatrix * vPos;
+            }
+        </script>
+
+        <!-- Wireframe Fragment Shader -->
+        <script id="wireframe_f_shader" type="x-shader/x-fragment">
+            precision mediump float;
+
+            void main() {
+                gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+            }
+        </script>
+
+        <!-- Gouraud Vertex Shader -->
+        <script id="gouraud_v_shader" type="x-shader/x-vertex">
+            attribute vec4 vPos;
+            attribute vec4 vNormal;
+            attribute vec2 vTexCoord;
+
+            varying vec4 fColor;
+            varying vec2 fTexCoord;
+
+            uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+            uniform mat4 modelViewMatrix;
+            uniform mat4 projectionMatrix;
+            uniform vec4 lightPos;
+            uniform float shininess;
+            uniform mat3 normalMatrix;
+
+            void main() {
+                vec3 pos = (modelViewMatrix * vPos).xyz;
+                vec3 light = lightPos.xyz;
+                vec3 L;
+
+                // Check for directional light
+                if (lightPos.w == 0.0)
+                    L = normalize(lightPos.xyz);
+                else
+                    L = normalize(lightPos.xyz - pos);
+
+                vec3 E = -normalize(pos);
+                vec3 H = normalize(L + E);
+
+                // Transform vertex normal into eye coordinates
+                vec3 N = normalize(normalMatrix * vNormal.xyz);
+
+                // Computer terms in the illumination equation
+                vec4 ambient = ambientProduct;
+
+                float Kd = max(dot(L, N), 0.0);
+                vec4 diffuse = Kd * diffuseProduct;
+
+                float Ks = pow(max(dot(N, H), 0.0), shininess);
+                vec4 specular = Ks * specularProduct;
+
+                if(dot(L, N) < 0.0)
+                    specular = vec4(0.0, 0.0, 0.0, 1.0);
+
+                gl_Position = projectionMatrix * modelViewMatrix * vPos;
+
+                fColor = ambient + diffuse + specular;
+                fColor.a = 1.0;
+                fTexCoord = vTexCoord;
+            }
+        </script>
+
+        <!-- Gouraud Fragment Shader -->
+        <script id="gouraud_f_shader" type="x-shader/x-fragment">
+            precision mediump float;
+
+            varying vec4 fColor;
+            varying vec2 fTexCoord;
+
+            uniform sampler2D tex0;
+
+            void main() {
+                gl_FragColor = fColor * (texture2D(tex0, fTexCoord));
+            }
+        </script>
+
+        <!-- Phong Vertex Shader -->
+        <script id="phong_v_shader" type="x-shader/x-vertex">
+            attribute vec4 vPos;
+            attribute vec4 vNormal;
+            attribute vec2 vTexCoord;
+            
+            varying vec2 fTexCoord;
+            varying vec3 N, L, E;
+
+            uniform mat4 modelViewMatrix;
+            uniform mat4 projectionMatrix;
+            uniform vec4 lightPos;
+            uniform mat3 normalMatrix;
+
+            void main() {
+                vec3 pos = (modelViewMatrix * vPos).xyz;
+
+                if (lightPos.w == 0.0)
+                    L = normalize(lightPos.xyz);
+                else
+                    L = normalize(lightPos).xyz - pos;
+
+                E = -normalize(pos);
+                N = normalize(normalMatrix * vNormal.xyz);
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vPos;
+
+                fTexCoord = vTexCoord;
+            }
+        </script>
+
+        <!-- Phong Fragment Shader -->
+        <script id="phong_f_shader" type="x-shader/x-fragment">
+            precision mediump float;
+
+            varying vec2 fTexCoord;
+            varying vec3 N, L, E;
+
+            uniform vec4 ambientProduct;
+            uniform vec4 diffuseProduct;
+            uniform vec4 specularProduct;
+            uniform float shininess;
+
+            uniform sampler2D tex0;
+
+            void main() {
+                vec4 fColor;
+
+                vec3 H = normalize(L + E);
+                
+                vec4 ambient = ambientProduct;
+
+                float Kd = max(dot(L, N), 0.0);
+                vec4 diffuse = Kd * diffuseProduct;
+
+                float Ks = pow(max(dot(N, H), 0.0), shininess);
+                vec4 specular = Ks * specularProduct;
+
+                if (dot(L, N) < 0.0)
+                    specular = vec4(0.0, 0.0, 0.0, 1.0);
+
+                fColor = ambient + diffuse + specular;
+                fColor.a = 1.0;
+
+                gl_FragColor = fColor * (texture2D(tex0, fTexCoord));
+            }
+        </script>
+
+        <!-- 
+            Scripts
+        -->
+
+        <!-- Libraries -->
+        <script type="text/javascript" src="../Common/webgl-utils.js"></script>
+        <script type="text/javascript" src="../Common/initShaders.js"></script>
+        <script type="text/javascript" src="../Common/MV.js"></script>
+
+        <!-- My Script -->
+        <script type="text/javascript" src="Superquadrics.js"></script>
+
+        <!-- 
+            HTML Elements 
+        -->
+
+        <!-- Selectors -->
+        <div id="div_selectors" style="vertical-align: -webkit-baseline-middle; text-align: center;">      
+            
+        <!-- Shape -->
+        <input type="radio" name="radio_shape" value="shape_texture" checked="true">Ellipsoid</input>
+        <input type="radio" name="radio_shape" value="shape_bump">Toroid</input>
+
+        <!-- Shading Method -->
+        <br>
+        <input type="radio" name="radio_shader" value="shader_wireframe" checked="true">Wireframe</input>
+        <input type="radio" name="radio_shader" value="shader_gouraud">Gouraud Shading</input>
+        <input type="radio" name="radio_shader" value="shader_phong">Phong Shading</input>
+
+        <!-- Mapping Method -->
+        <br>
+        <input type="radio" name="radio_mapping" value="mapping_texture" checked="true">Texture Mapping</input>
+        <input type="radio" name="radio_mapping" value="mapping_bump">[Unimplemented] Bump Mapping</input>
+
+        <!-- Update Selections Button -->
+        <p>
+        <button id="button_render" onclick="listener_update();" style="vertical-align: middle; text-align: center;">Update Selections</button>
+        </div>
+
+        <!-- WebGL Canvas -->
+        <div id="div_canvas" style="vertical-align: top; text-align: center;">
+            <br>
+            <canvas id="gl_canvas" width="480" height="480" style="display: inline; border: 3px solid steelblue;">
+                    It seems that your browser does not support the HTML5 canvas element.
+            </canvas>
+        </div>    
+
+        <!-- Buttons and Sliders -->
+        <div id="div_ui" style="vertical-align: -webkit-baseline-middle; text-align: center;">
+
+             <!-- X rotation Slider -->  
+             <div class="slidecontainer">
+                <label for="slider_theta" style="vertical-align: middle; text-align: left; font-family: monospace; padding-right: 42px;">X ROTATION</label>
+                <input type="range" class="slider" id="slider_theta" min="-180" max="179" step="1" value="0" style="
+                    vertical-align: middle;
+                    text-align: end;
+                " oninput="listener_theta();">
+                </input>
+                <label for="slider_theta" id="val_theta" style="position: absolute; vertical-align: middle; font-family: monospace;"></label>
+            </div>
+
+             <!-- Y Rotation Slider -->  
+             <div class="slidecontainer">
+                <label for="slider_gamma" style="vertical-align: middle; text-align: left; font-family: monospace; padding-right: 42px;">Y ROTATION</label>
+                <input type="range" class="slider" id="slider_gamma" min="-180" max="179" step="1" value="0" style="
+                    vertical-align: middle;
+                    text-align: end;
+                " oninput="listener_gamma();">
+                </input>
+                <label for="slider_gamma" id="val_gamma" style="position: absolute; vertical-align: middle; font-family: monospace;"></label>
+            </div>
+
+            <!-- Z Rotation Slider -->  
+            <div class="slidecontainer">
+                <label for="slider_phi" style="vertical-align: middle; text-align: left; font-family: monospace; padding-right: 42px;">Z ROTATION</label>
+                <input type="range" class="slider" id="slider_phi" min="-180" max="179" step="1" value="0" style="
+                    vertical-align: middle;
+                    text-align: end;
+                " oninput="listener_phi();">
+                </input>
+                <label for="slider_phi" id="val_phi" style="position: absolute; vertical-align: middle; font-family: monospace;"></label>
+            </div>
+
+            <!-- ETA Resolution Slider -->
+            <div class="slidecontainer">
+                <label for="slider_eta" style="vertical-align: middle; text-align: left; font-family: monospace; padding-right: 14px;">ETA RESOLUTION</label>
+                <input type="range" class="slider" id="slider_eta" min="1" max="49" step="1" value="25" style="
+                    vertical-align: middle;
+                    text-align: end;
+                " oninput="listener_eta();">
+                </input> 
+                <label for="slider_eta" id="val_eta" style="position: absolute; vertical-align: middle; font-family: monospace;"></label>
+            </div>
+
+            <!-- OMEGA Resolution Slider -->
+            <div class="slidecontainer">
+                <label for="slider_omega" style="vertical-align: middle; text-align: left; font-family: monospace;">OMEGA RESOLUTION</label>
+                <input type="range" class="slider" id="slider_omega" min="1" max="49" step="1" value="25" style="
+                    vertical-align: middle;
+                    text-align: end;
+                " oninput="listener_omega();">
+                </input>
+                <label for="slider_omega" id="val_omega" style="position: absolute; vertical-align: middle; font-family: monospace;"></label>
+            </div>
+
+            <!-- EPSILON_1 Slider -->
+            <div class="slidecontainer">
+                <label for="slider_epsilon1" style="vertical-align: middle; text-align: left; font-family: monospace; padding-right: 49px;">EPSILON_1</label>
+                <input type="range" class="slider" id="slider_epsilon1" min="0" max="2.5" step="0.05" value="1.25" style="
+                    vertical-align: middle;
+                    text-align: end;
+                " oninput="listener_epsilon1();">
+                </input>
+                <label for="slider_epsilon1" id="val_epsilon1" style="position: absolute; vertical-align: middle; font-family: monospace;"></label>
+            </div>
+
+            <!-- EPSILON_2 Slider -->
+            <div class="slidecontainer">
+                <label for="slider_epsilon2" style="vertical-align: middle; text-align: left; font-family: monospace; padding-right: 49px;">EPSILON_2</label>
+                <input type="range" class="slider" id="slider_epsilon2" min="0" max="2.5" step="0.05" value="1.25" style="
+                    vertical-align: middle;
+                    text-align: end;
+                " oninput="listener_epsilon2();">
+                </input>
+                <label for="slider_epsilon2" id="val_epsilon2" style="position: absolute; vertical-align: middle; font-family: monospace;"></label>
+            </div>
+
+            <!-- ALPHA_1 Slider -->
+            <div class="slidecontainer">
+                    <label for="slider_alpha1" style="vertical-align: middle; text-align: left; font-family: monospace; padding-right: 63px;">ALPHA_1</label>
+                    <input type="range" class="slider" id="slider_alpha1" min="0.5" max="4.5" step="0.25" value="2.5" style="
+                        vertical-align: middle;
+                        text-align: end;
+                    " oninput="listener_alpha1();">
+                    </input>
+                    <label for="slider_alpha1" id="val_alpha1" style="position: absolute; vertical-align: middle; font-family: monospace;"></label>
+            </div>
+
+             <!-- ALPHA_2 Slider -->
+             <div class="slidecontainer">
+                    <label for="slider_alpha2" style="vertical-align: middle; text-align: left; font-family: monospace; padding-right: 63px;">ALPHA_2</label>
+                    <input type="range" class="slider" id="slider_alpha2" min="0.5" max="4.5" step="0.25" value="2.5" style="
+                        vertical-align: middle;
+                        text-align: end;
+                    " oninput="listener_alpha2();">
+                    </input>
+                    <label for="slider_alpha2" id="val_alpha2" style="position: absolute; vertical-align: middle; font-family: monospace;"></label>
+            </div>
+
+            <!-- ALPHA_3 Slider -->
+            <div class="slidecontainer">
+                <label for="slider_alpha3" style="vertical-align: middle; text-align: left; font-family: monospace; padding-right: 63px;">ALPHA_3</label>
+                <input type="range" class="slider" id="slider_alpha3" min="0.5" max="4.5" step="0.25" value="2.5" style="
+                    vertical-align: middle;
+                    text-align: end;
+                " oninput="listener_alpha3();">
+                </input>
+                <label for="slider_alpha3" id="val_alpha3" style="position: absolute; vertical-align: middle; font-family: monospace;"></label>
+            </div>
+
+            <!-- ALPHA_4 Slider -->
+            <div class="slidecontainer">
+                <label for="slider_radius" style="vertical-align: middle; text-align: left; font-family: monospace; padding-right: 21px;">TOROID RADIUS</label>
+                <input type="range" class="slider" id="slider_radius" min="0.5" max="9.5" step="0.25" value="5" style="
+                    vertical-align: middle;
+                    text-align: end;
+                " oninput="listener_radius();">
+                </input>
+                <label for="slider_radius" id="val_radius" style="position: absolute; vertical-align: middle; font-family: monospace;"></label>
+            </div>
+        </div>        
+    </body>
+</html>

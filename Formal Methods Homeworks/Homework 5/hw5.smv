@@ -1,0 +1,83 @@
+MODULE main
+VAR
+    sensor : THERMOMETER;
+    cpu : CPU(sensor);
+
+-- CTL formulas to prove
+-- (1) Just after the ISR has terminated, the sensor is sleeping
+CTLSPEC AX(cpu.state = 5) -> sensor.sleep = 0b1_1;
+-- (2) When the sensor is not sleeping, then the ISR is executed
+CTLSPEC AG(sensor.sleep != 0b1_1 -> cpu.state != 0);
+-- (3) If the ISR is not executed, then the sensor is sleeping
+CTLSPEC AG(cpu.state != 0 -> sensor.sleep = 0b1_1);
+-- (4) When the ISR is not executed, then the value of memory
+--     at the previous value of oldest is equal to cpu.temperature
+CTLSPEC AG(cpu.state != 0 -> cpu.memory[cpu.oldest] = cpu.temperature);
+-- (5) Just after the ISR has terminated, then the value of memory
+--     at the previous value of oldest is equal to cpu.temperature
+CTLSPEC AX(cpu.state = 5) -> cpu.memory[cpu.oldest] = cpu.temperature;
+-- (6) When the ISR is not executed, then cpu.temperature >= 173
+CTLSPEC AG(cpu.state = 0 -> cpu.temperature >= uwconst(173, 32));
+-- (7) When ISR has terminated, then cpu.temperature >= 173
+CTLSPEC AX(cpu.state = 5) -> cpu.temperature >= uwconst(173, 32);
+-- (8) Oldest is always in the set {0,1,2}
+CTLSPEC AG(cpu.oldest in 0 .. 2);
+
+MODULE CPU(sensor)
+VAR
+    temperature: word[32];
+    memory: array 0 .. 2 of word[32];
+    oldest: {0, 1, 2};
+    state: {0, 1, 2, 3, 4, 5};
+ASSIGN
+    init(state) := 0;
+    next(state) :=
+        case
+            state = 0 : 1;
+            state = 1 : 2;
+            state = 2 : 3;
+            state = 3 : 4;
+            state = 4 : 5;
+            state = 5 : 0;
+        esac;
+    next(sensor.sleep) :=
+        case
+            state = 1 : 0b1_0;
+            state = 3 : 0b1_1;
+            TRUE : sensor.sleep;
+        esac;
+    next(temperature) :=
+        case
+            state = 2 : sensor.temperature;
+            state = 4 : temperature + uwconst(273, 32);
+            TRUE : temperature;
+        esac;
+    next(oldest) :=
+        case
+            state = 5 & oldest = 2 : 0;
+            state = 5 & oldest != 2 : oldest + 1;
+            TRUE: oldest;
+        esac;
+    next(memory[0]) :=
+        case
+            state = 5 & oldest = 0 : temperature;
+            TRUE : memory[0];
+        esac;
+    next(memory[1]) :=
+        case
+            state = 5 & oldest = 1 : temperature;
+            TRUE : memory[1];
+        esac;
+    next(memory[2]) :=
+        case
+            state = 5 & oldest = 2 : temperature;
+            TRUE : memory[2];
+        esac;
+
+MODULE THERMOMETER
+VAR
+    sleep: word[1];
+    temperature: word[32];
+ASSIGN
+    -- I could not find a way to assign a random value to a word
+    next(temperature) := uwconst(0, 32);

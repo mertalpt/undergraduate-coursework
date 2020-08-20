@@ -1,0 +1,52 @@
+</ 
+Description: Test program
+Author: -
+Date: 28.10.2018
+/>
+
+start_funcs
+func dummy: (a, b)->(c){
+    var d := 10;
+    c := (a + b) * d;
+}
+end_funcs
+
+<// Program starts here 
+
+move: (10)->();
+turn: (30)->();
+grab: ()->();
+readSensor: (127)->(readData);
+sendData: (43, readData)->(statusCode);
+
+when(statusCode ~= 0){
+    print("success");
+}
+otherwise{
+    print(“error”);
+};
+
+
+var testList := list[4];
+
+var str := "Test string.";
+
+var val1 := 30;
+var val2 := 10;
+var val3 := 5;
+while(val1 >= val2){
+    dummy: (val1, val2)->(result);
+    print: (result)->();
+    val1 := val1 - 2;
+    val2 := val2 + 2;
+    val3++;
+    val3 *= 2;
+    val3--;
+    val1 /= 3;
+    val2 += 5;
+    
+};
+
+for(i:=0; i:20:2){
+    print(i);
+};

@@ -1,0 +1,342 @@
+module game(
+        input logic clk, reset, start,
+        input logic [3:0] keyb_col,
+        output logic [6:0] sevSegOut,
+        output logic [3:0] keyb_row, an, motorOut, motorInternal,
+        output logic dp, motorIdle, delayInProcess
+    );
+    
+    // Internal wires
+    logic initiateNext; // Start next turn
+    logic initiateNextDelayed; // Delayed initiateNext signal
+    //logic delayInProcess; // Turns to 1 when signal delayer is delaying a signal
+    logic resetMain; // Resets the game when user input reset is 1 or at the posedge of start input
+    //logic motorIdle; // Turns to 1 when motor has been idle for about 1 seconds
+    logic posedgeStart; // Posedge of start
+    logic negedgeStart; // Negedge of start
+    logic posedgeKeyValid; // Posedge of keyValid
+    logic negedgeKeyValid; // Negedge of keyValid
+    logic keyValid; // Keypad input for key press
+    logic keyValidControlled; // keyValid is set to 0 when motor is not idle
+    logic [3:0] keyValues; // Keypad input for key value
+    logic [3:0] mappedValues; // Mapped values of key values
+    
+    logic [3:0] rngInternal; // Rearranged output of RNG module    
+    logic [1:0] motorSpeed, motorDirection; // Output of RNG module
+    //logic [3:0] motorInternal; // Input of motor wrapper, comes from memory module
+    
+    // Connecting idle detector
+    idle_detector_4bit motorIdleModule(clk, motorOut, motorIdle); // If motorOut didn't change for about 1 seconds, then motor is idle
+    
+    // Setting idle keypad logic
+    assign keyValidControlled = keyValid & motorIdle & ~delayInProcess;
+    
+    // Logic for initiating next turn
+    assign initiateNext = negedgeStart | negedgeKeyValid;
+    
+    // Connect delayer for initiateNext
+    signal_delayer_1bit initiateNextDelayer(clk, initiateNext, delayInProcess, initiateNextDelayed);
+    
+    // Logic for resetting
+    assign resetMain = posedgeStart | reset;
+    
+    // Connecting sedge detectors
+    posedge_detector posedgeOfStart(clk, start, posedgeStart);
+    negedge_detector negedgeOfStart(clk, start, negedgeStart);
+    posedge_detector posedgeOfKeyValid(clk, keyValidControlled, posedgeKeyValid);
+    negedge_detector negedgeOfKeyValid(clk, keyValidControlled, negedgeKeyValid);
+    
+    // Connecting Keypad module
+    keypad4X4 keypad(clk, keyb_row, keyb_col, keyValues, keyValid);
+    
+    // Connecting Mapper module
+    key_mapper mapper(keyValues, mappedValues);
+    
+    // Connecting Random Number Generator
+    rng_4bit rndNumGenerator(clk, resetMain, motorSpeed, motorDirection); // Tested and working
+    
+    // Rearranging RNG output in a new bus
+    assign rngInternal[3] = motorSpeed[0];
+    assign rngInternal[2] = motorDirection[0];
+    assign rngInternal[1] = motorSpeed[1];
+    assign rngInternal[0] = motorDirection[1];
+    
+    // Register for the movement made
+    movement_memory motorMemory(clk, resetMain, initiateNextDelayed, rngInternal, motorInternal);
+    
+    // Connecting Stepper Motor Wrapper
+    /*
+     *                 First Movement - Second Movement
+     * motorSpeed[0]motorDirection[0] - motorSpeed[1]motorDirection[1]
+     * Speed: 0-Short, 1-Long
+     * Direction: 0-Left, 1-Right
+     */
+    steppermotor_wrapper motorControl(
+        clk, 
+        {motorInternal[0], motorInternal[2]}, 
+        {motorInternal[1], motorInternal[3]}, 
+        motorOut, initiateNextDelayed);
+    
+    // Connecting Seven Segment Display module
+    seven_segment_logic sevSegDisplay(clk, resetMain, posedgeKeyValid, mappedValues, motorInternal, sevSegOut, an, dp);
+
+endmodule
+
+module idle_detector_4bit(
+        input logic clk,
+        input logic [3:0] signal,
+        output logic idle
+    );
+    
+    // Internal logic
+    logic didChange; // Keeps track of signal change per clock
+    
+    // Register for delayed signal
+    logic [3:0] signal_delayed;
+    
+    // Register for certainty of idleness
+    logic [26:0] certainty;
+    
+    // Implement change logic
+    assign didChange = (signal[3] ^ signal_delayed[3]) | (signal[2] ^ signal_delayed[2]) | (signal[1] ^ signal_delayed[1]) | (signal[0] ^ signal_delayed[0]);
+    
+    // Main logic
+    always_ff @(posedge clk)
+        begin
+            signal_delayed <= signal;
+        
+            if (didChange) // If there is a change, keep certainty at maximum
+                certainty <= 27'b111_1111_1111_1111_1111_1111_1111;
+            else if (~idle) // If there is not a change and idle is not 1, decrement
+                certainty <= certainty - 1;
+            else // If there is not a change and idle is 1, keep certainty at minimum
+                certainty <= 27'b0;
+        end
+        
+    assign idle = 
+        ~(certainty[26] | certainty[25] | certainty[24] | certainty[23] 
+        | certainty[22] | certainty[21] | certainty[20] | certainty[19] 
+        | certainty[18] | certainty[17] | certainty[16] | certainty[15]
+        | certainty[14] | certainty[13] | certainty[12] | certainty[11] 
+        | certainty[10] | certainty[9]  | certainty[8]  | certainty[7] 
+        | certainty[6]  | certainty[5]  | certainty[4]  | certainty[3] 
+        | certainty[2]  | certainty[1]  | certainty[0]);
+endmodule
+
+module signal_delayer_1bit(
+        input logic clk, signal,
+        output logic counting, signal_delayed
+    );
+    
+    // Logic for signal was receiver in the last delay period
+    logic enable;
+    
+    assign enable = signal | counting;
+    
+    // Logic for counter is active
+    // logic counting; // Made into an output
+    
+    // Down counter register
+    logic [26:0] counter;
+    
+    always_ff @(posedge clk)
+        begin
+            if (enable == 1 && counter != 27'b0)
+                begin
+                    counter <= counter - 1;
+                    counting <= 1'b1;
+                end
+            else
+                begin
+                    counter <= 27'b111_1111_1111_1111_1111_1111_1111;
+                    counting <= 1'b0;
+                end
+        
+        end
+        
+    assign signal_delayed = 
+        ~(counter[26] | counter[25] | counter[24]
+        | counter[23] | counter[22] | counter[21] | counter[20]
+        | counter[19] | counter[18] | counter[17] | counter[16]
+        | counter[15] | counter[14] | counter[13] | counter[12]
+        | counter[11] | counter[10] | counter[9]  | counter[8]
+        | counter[7]  | counter[6]  | counter[5]  | counter[4]
+        | counter[3]  | counter[2]  | counter[1]  | counter[0]);
+        
+endmodule
+
+module posedge_detector(
+    input clk, in,
+    output out
+    );
+    
+    // Register
+    logic in_delayed;
+    
+    // Take old in into in_delayed
+    always_ff @(posedge clk)
+        begin
+            in_delayed <= in;
+        end
+        
+    // Main logic for edge detection
+    assign out = in & ~in_delayed;
+    
+endmodule
+
+module negedge_detector(
+        input clk, in,
+        output out
+    );
+    
+    // Register
+    logic in_delayed;
+    
+    // Take old in into in_delayed
+    always_ff @(posedge clk)
+        begin
+            in_delayed <= in;
+        end
+        
+    // Main logic
+    assign out = ~in & in_delayed;
+    
+endmodule
+
+module key_mapper(
+        input logic [3:0] keyValue,
+        output logic [3:0] mappedValue
+    );
+    
+    /*
+     * Mapping of the movements:
+     * SL: 11
+     * SR: 00
+     * LL: 10
+     * LR: 01
+     */
+     
+    always_comb
+        begin
+            case (keyValue)                
+                /* D */ 4'b0000: mappedValue = 4'b0101; // SR-SR
+                /* # */ 4'b0001: mappedValue = 4'b0111; // SR-LR
+                /* 0 */ 4'b0010: mappedValue = 4'b0110; // SR-LL
+                /* * */ 4'b0011: mappedValue = 4'b0100; // SR-SL
+                /* C */ 4'b0100: mappedValue = 4'b1101; // LR-SR
+                /* 9 */ 4'b0101: mappedValue = 4'b1111; // LR-LR
+                /* 8 */ 4'b0110: mappedValue = 4'b1110; // LR-LL
+                /* 7 */ 4'b0111: mappedValue = 4'b1100; // LR-SL
+                /* B */ 4'b1000: mappedValue = 4'b1001; // LL-SR
+                /* 6 */ 4'b1001: mappedValue = 4'b1011; // LL-LR
+                /* 5 */ 4'b1010: mappedValue = 4'b1010; // LL-LL
+                /* 4 */ 4'b1011: mappedValue = 4'b1000; // LL-SL
+                /* A */ 4'b1100: mappedValue = 4'b0001; // SL-SR
+                /* 3 */ 4'b1101: mappedValue = 4'b0011; // SL-LR
+                /* 2 */ 4'b1110: mappedValue = 4'b0010; // SL-LL
+                /* 1 */ 4'b1111: mappedValue = 4'b0000; // SL-SL
+                default: mappedValue = 4'b0000; // No value for default
+            endcase
+        end
+    
+endmodule
+
+module rng_4bit(
+    input logic clk, reset,
+    output logic [1:0] rndSpeed, rndDirection
+    );
+    
+    // Internal logic and registers
+    logic [7:0] speedRegisters, directionRegisters;
+    logic speedFeedback, directionFeedback;
+    
+    // Feedback with XORs
+    assign speedFeedback = speedRegisters[7] ^ speedRegisters[6] ^ speedRegisters[5] ^ speedRegisters[4];
+    assign directionFeedback = directionRegisters[7] ^ directionRegisters[5] ^ directionRegisters[4] ^ directionRegisters[3];
+    
+    always_ff @(posedge clk)
+        begin
+            if (reset) // Reset to 1, because this LSFR is built with XORs
+                begin
+                    speedRegisters <= 8'h01;
+                    directionRegisters <= 8'h01;
+                end
+            else // Shift the registers and feed feedback into first register
+                begin
+                    speedRegisters <= {speedRegisters[6:0], speedFeedback};
+                    directionRegisters <= {directionRegisters[6:0], directionFeedback};
+                end
+        end
+    
+    assign rndSpeed[1:0] = speedRegisters[1:0];
+    assign rndDirection[1:0] = directionRegisters[1:0];
+    
+endmodule
+
+module movement_memory(
+        input logic clk, reset, load,
+        input logic [3:0] movementIn,
+        output logic [3:0] movementMem
+    );
+    
+    always_ff @(posedge clk)
+        begin
+            if (reset)
+                movementMem <= 4'b0;
+            else if (load == 1)
+                movementMem <= movementIn;
+            else
+                movementMem <= movementMem;
+        end
+        
+endmodule
+
+module seven_segment_logic(
+        input logic clk, reset, posedgeKeyValid,
+        input logic [3:0] keyValue, motorValue,
+        output logic [6:0] digit,
+        output logic [3:0] an,
+        output logic dp 
+    );
+    
+    // Internal wires and registers
+    logic isCorrect;
+    logic [3:0] score;
+    
+    // Combinational comparator module takes keyValue and motorValue and outputs a single bit for true or false
+    
+    assign isCorrect = ~(keyValue[3] ^ motorValue[3]) &  ~(keyValue[2] ^ motorValue[2]) &  ~(keyValue[1] ^ motorValue[1]) &  ~(keyValue[0] ^ motorValue[0]);
+    
+    // Score counter checks comparator results if posedgeKeyValid is 1, then increments the score by 1, else keeps the previous score
+    always_ff @(posedge clk)
+        begin
+            if (reset) // If game is reset, reset the score
+                score <= 4'b0000;  
+            else if (posedgeKeyValid) // If an input is taken, evaluate the score
+                begin
+                    if (isCorrect == 1)
+                        begin
+                            if (score == 4'b1001) // If score goes over 9, reset to 0
+                                score <= 4'b0000;
+                            else
+                                score <= score + 1;
+                        end
+                    else
+                        begin
+                            if (score == 4'b0000) // If score is 0, keep it 0
+                                score <= 4'b0000;
+                            else
+                                score <= score - 1;
+                        end
+                end
+            else // Else keep the score
+                score <= score;
+        end
+    
+    // Score registers' memory is fed into given sevSeg module
+    SevSeg_4digit sevSegController(
+        clk, score, 4'b0, 4'b0, 4'b0, 
+        digit[6], digit[5], digit[4], digit[3], digit[2], digit[1], digit[0],
+        dp, an);
+    
+endmodule

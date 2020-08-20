@@ -1,0 +1,339 @@
+/*
+ *	Formal software model
+ *
+ *	The software model describes the operations of the three device driver
+ *	interface functions for initialization, submitting a packet to transmit,
+ *	and teardown. In the model each single computation step of a device driver
+ *	function occurs between two states.
+ */
+
+/*
+ *	Global state components:
+ *	-queue_head : word[2]: Data structure of the device driver storing the
+ *	 index of the first buffer descriptor in the queue that the software
+ *	 considers to be in use of the transmitter.
+ *	-queue_tail : word[2]: Data structure of the device driver storing the
+ *	 index of the last buffer descriptor in the queue that the software
+ *	 considers to be in use of the transmitter.
+ *	-new_bd : word[2]: Local variable used in transmit() for optimization.
+ *	-open_state : {open_idle, open_set_reset, open_reset_test} initial value is
+ *	 open_idle.
+ *	-transmit_state : {transmit_idle, transmit_update_queue,
+ *	 transmit_bad_buffer_or_queue_full_or_not_queue_full,
+ *	 transmit_updated_new_bd, transmit_check_misqueue} initial value is
+ *	 transmit_idle.
+ *	-stop_state : {stop_idle, stop_set_teardown, stop_teardown_test} initial
+ *	 value is stop_idle.
+ *	-dead: boolean. dead is initialized to false. dead is set to true when the
+ *	 driver triggers an erronous operation of the transmitter.
+ */
+
+/*
+ *	open()
+ *
+ *	open shall make the transmitter available for transmission (initialization
+ *	of transmitter and software data structures). open can be invoked at any
+ *	time, and must not cause any erronous operations. open, transmit and stop
+ *	cannot be executed simultaneously.
+ */
+-----------------------------open_idle
+open()
+-----------------------------open_set_reset
+	RESET ≔ 0b1_1;
+-----------------------------open_reset_test
+	while (RESET = 0b1_1)
+		;
+	HDP ≔ 0b2_00;
+	queue_head ≔ 0b2_00;
+	queue_tail ≔ 0b2_00;
+-----------------------------open_idle
+
+/*
+ *	local variable update:
+ *	-state:
+ *		//Invocation of open.
+ *		if open_state = open_idle & transmit_state = transmit_idle &
+ *			next(transmit_state) = transmit_idle & stop_state = stop_idle &
+ *			next(stop_state) = stop_idle & turn = software
+ *		then
+ *			//Non-deterministic assignment.
+ *			open_state ∈ {open_set_reset, open_idle}
+ *	
+ *		if open_state = open_set_reset & turn = software
+ *		then
+ *			open_state ≔ open_reset_test
+ *	
+ *		if open_state = open_reset_test & RESET != 0b1_1 & turn = software
+ *		then
+ *			open_state ≔ open_idle
+ *	
+ *	global variable updates:
+ *	-RESET:
+ *		if open_state = open_set_reset & next(open_state) = open_reset_test &
+ *			turn = software
+ *		then
+ *			RESET ≔ 0b1_1
+ *	
+ *	-HDP:
+ *		if open_state = open_reset_test & next(open_state) = open_idle &
+ *			turn = software
+ *		then
+ *			HDP ≔ 0b2_00
+ *	
+ *	-queue_head:
+ *		if open_state = open_reset_test & next(open_state) = open_idle &
+ *			turn = software
+ *		then
+ *			queue_head ≔ 0b2_00
+ *	
+ *	-queue_tail:
+ *		if open_state = open_reset_test & next(open_state) = open_idle &
+ *			turn = software
+ *		then
+ *			queue_tail ≔ 0b2_00
+ */
+
+
+
+/*
+ *	transmit()
+ *
+ *	Given a physical address of the start of a frame to transmit and the length
+ *	of the frame in bytes, transmit shall configure the transmitter such that
+ *	the transmitter will transmit the frame, without causing any erronous
+ *	operations, if possible. If it is not possible to send the frame without
+ *	causing erronous behavior, transmit shall just return. Also, no misqueue
+ *	condition may occur.
+ */
+//Macros:
+TRANSMIT_OVERFLOW ≔ pa + length < pa
+TRANSMIT_LENGTH_EQ_ZERO ≔ length = 0
+TRANSMIT_INSIDE_RAM ≔ RAM_START <= pa & pa + length - 0b2_01 <= RAM_END
+TRANSMIT_QUEUE_FULL ≔
+	//Queue is full without wrapping around.
+	(queue_head < queue_tail &
+	 queue_head = HW_MEMORY_START & queue_tail = HW_MEMORY_END) |
+	//Queue is full with wrapping around.
+	(queue_tail < queue_head & queue_tail + 0b2_01 = queue_head)
+TRANSMIT_BAD_BUFFER_OR_QUEUE_FULL ≔ TRANSMIT_OVERFLOW |
+	TRANSMIT_LENGTH_EQ_ZERO | !TRANSMIT_INSIDE_RAM | TRANSMIT_QUEUE_FULL
+
+------------------------------------------------------------------transmit_idle
+transmit(pa : 2word, length : 2word)
+----------------------------------------------------------transmit_update_queue
+	while (queue_head != 0 & HW_MEMORY_OWN[queue_head] = 0b1_0)
+		queue_head ≔ HW_MEMORY_NDP[queue_head]
+
+	if (queue_head = 0b2_00)
+		queue_tail ≔ 0b2_00
+----------------------------transmit_bad_buffer_or_queue_full_or_not_queue_full
+	if (TRANSMIT_BAD_BUFFER_OR_QUEUE_FULL) then
+		return
+	else if HDP = 0b2_00 then
+		queue_head ≔ HW_MEMORY_START
+		queue_tail ≔ HW_MEMORY_START
+		HW_MEMORY_NDP[HW_MEMORY_START] ≔ 0b2_00		//NDP
+		HW_MEMORY_BP[HW_MEMORY_START] ≔ pa			//BP
+		HW_MEMORY_BL[HW_MEMORY_START] ≔ length		//BUFFER LENGTH
+		HW_MEMORY_OWN[HW_MEMORY_START] ≔ 0b1_1		//ownership
+		HW_MEMORY_EOQ[HW_MEMORY_START] ≔ 0b1_0		//end of queue
+		//Start transmission, index 1 in HW_MEMORY corresponds to first
+		//address of transmitter memory, HW_MEMORY_START.
+		HDP ≔ HW_MEMORY_START
+		return
+	else
+		if queue_tail = HW_MEMORY_END then
+			new_bd ≔ HW_MEMORY_START
+		else
+			new_bd ≔ queue_tail + 0b2_01
+--------------------------------------------------------transmit_updated_new_bd
+		HW_MEMORY_NDP[new_bd] ≔ 0b2_00					//NDP.
+		HW_MEMORY_BP[new_bd] ≔ pa						//BP.
+		HW_MEMORY_BL[new_bd] ≔ length					//BUFFER LENGTH.
+		HW_MEMORY_OWN[new_bd] ≔ 0b1_1					//Ownership.
+		HW_MEMORY_EOQ[new_bd] ≔ 0b1_0					//End of queue.
+		HW_MEMORY_NDP[queue_tail] ≔ new_bd				//Add new bd to tail.
+--------------------------------------------------------transmit_check_misqueue
+		if (HW_MEMORY_OWN[queue_tail] = 0b1_0 &
+			HW_MEMORY_EOQ[queue_tail] = 0b1_1 &
+			HW_MEMORY_NDP[queue_tail] != 0b2_00) then
+			HDP ≔ new_bd
+			queue_head ≔ new_bd
+
+		queue_tail ≔ new_bd								//Update tail.
+
+		return
+------------------------------------------------------------------transmit_idle
+
+/*
+ *	local variable updates:
+ *	-transmit_state:
+ *		//Invocation of transmit.
+ *		if open_state = open_idle & next(open_state) = open_idle &
+ *			transmit_state = transmit_idle & stop_state = stop_idle &
+ *			next(stop_state) = stop_idle & turn = software
+ *		then
+ *			transmit_state ∈ {transmit_start, transmit_idle}
+ *	
+ *		if transmit_state = transmit_update_queue &
+ *			!(queue_head != 0 & HW_MEMORY_OWN[queue_head] = 0b1_0) &
+ *			turn = software
+ *		then
+ *			transmit_state ≔ transmit_bad_buffer_or_queue_full_or_not_queue_full
+ *	
+ *		if transmit_state = transmit_bad_buffer_or_queue_full_or_not_queue_full &
+ *			!TRANSMIT_BAD_BUFFER_OR_QUEUE_FULL & HDP = 0b2_00 & turn = software
+ *		then
+ *			transmit_state ≔ transmit_idle
+ *	
+ *		if transmit_state = transmit_bad_buffer_or_queue_full_or_not_queue_full &
+ *			!TRANSMIT_BAD_BUFFER_OR_QUEUE_FULL & HDP != 0b2_00 & turn = software
+ *		then
+ *			transmit_state ≔ transmit_updated_new_bd
+ *	
+ *		if transmit_state = transmit_updated_new_bd & turn = software
+ *		then
+ *			transmit_state ≔ transmit_check_misqueue
+ *	
+ *		if transmit_state = transmit_check_misqueue & turn = software
+ *		then
+ *			transmit_state ≔ transmit_idle
+ *	
+ *	-queue_head:
+ *		if transmit_state = transmit_update_queue & queue_head != 0 &
+ *			HW_MEMORY_OWN[queue_head] = 0b1_0 & turn = software
+ *		then
+ *			queue_head ≔ HW_MEMORY_NDP[queue_head]
+ *	
+ *		if !TRANSMIT_BAD_BUFFER_OR_QUEUE_FULL & HDP = 0b2_00 & turn = software
+ *		then
+ *			queue_head ≔ HW_MEMORY_START
+ *	
+ *		if transmit_state = transmit_check_misqueue &
+ *			HW_MEMORY_OWN[queue_tail] = 0b1_0 &
+ *			HW_MEMORY_EOQ[queue_tail] = 0b1_1 &
+ *			HW_MEMORY_NDP[queue_tail] != 0b2_00 & turn = software
+ *		then
+ *			queue_head ≔ new_bd
+ *	
+ *	-queue_tail:
+ *		if transmit_state = transmit_update_queue &
+ *			!(queue_head != 0 & HW_MEMORY_OWN[queue_head] = 0b1_0) &
+ *			queue_head = 0b2_00 & turn = software
+ *		then
+ *			queue_tail ≔ 0b2_00
+ *	
+ *		if transmit_state = transmit_bad_buffer_or_queue_full_or_not_queue_full &
+ *			!TRANSMIT_BAD_BUFFER_OR_QUEUE_FULL & HDP = 0b2_00 & turn = software
+ *		then
+ *			queue_tail ≔ HW_MEMORY_START
+ *	
+ *		if transmit_state = transmit_check_misqueue & turn = software
+ *		then
+ *			queue_tail ≔ new_bd
+ *	
+ *	-new_bd:
+ *		if transmit_state = transmit_bad_buffer_or_queue_full_or_not_queue_full &
+ *			!TRANSMIT_BAD_BUFFER_OR_QUEUE_FULL & HDP != 0b2_00 &
+ *			queue_tail = HW_MEMORY_END & turn = software
+ *		then
+ *			new_bd ≔ HW_MEMORY_START
+ *	
+ *		if transmit_state = transmit_bad_buffer_or_queue_full_or_not_queue_full &
+ *			!TRANSMIT_BAD_BUFFER_OR_QUEUE_FULL & HDP != 0b2_00 &
+ *			queue_tail != HW_MEMORY_END & turn = software
+ *		then
+ *			new_bd ≔ queue_tail + 0b2_01
+ *	
+ *	global variable updates:
+ *	-HW_MEMORY:
+ *		if transmit_state = transmit_bad_buffer_or_queue_full_or_not_queue_full &
+ *			!TRANSMIT_BAD_BUFFER_OR_QUEUE_FULL & HDP = 0b2_00 & turn = software
+ *		then
+ *			HW_MEMORY_NDP[HW_MEMORY_START] ≔ 0b2_00
+ *			HW_MEMORY_BP[HW_MEMORY_START] ≔ pa
+ *			HW_MEMORY_BL[HW_MEMORY_START] ≔ length
+ *			HW_MEMORY_OWN[HW_MEMORY_START] ≔ 0b1_1
+ *			HW_MEMORY_EOQ[HW_MEMORY_START] ≔ 0b1_0
+ *	
+ *		if transmit_state = transmit_updated_new_bd & turn = software
+ *		then
+ *			HW_MEMORY_NDP[new_bd] ≔ 0b2_00
+ *			HW_MEMORY_BP[new_bd] ≔ pa
+ *			HW_MEMORY_BL[new_bd] ≔ length
+ *			HW_MEMORY_OWN[new_bd] ≔ 0b1_1
+ *			HW_MEMORY_EOQ[new_bd] ≔ 0b1_0
+ *			HW_MEMORY_NDP[queue_tail] ≔ new_bd
+ *	
+ *	-HDP:
+ *		if transmit_state = transmit_bad_buffer_or_queue_full_or_not_queue_full &
+ *			!TRANSMIT_BAD_BUFFER_OR_QUEUE_FULL & HDP = 0b2_00 & turn = software
+ *		then
+ *			HDP ≔ HW_MEMORY_START
+ *	
+ *		if transmit_state = transmit_check_misqueue &
+ *			HW_MEMORY_OWN[queue_tail] = 0b1_0 &
+ *			HW_MEMORY_EOQ[queue_tail] = 0b1_1 &
+ *			HW_MEMORY_NDP[queue_tail] != 0b2_00 & turn = software
+ *		then
+ *			HDP ≔ new_bd
+ */
+
+
+
+
+/*
+ *	stop()
+ *
+ *	stop turns off the transmitter. That is, put the transmitter in an idle
+ *	state, without causing any erronous behavior. When stop terminates, the
+ *	transmitter shall be idle.
+ */
+-----------------------------------stop_idle
+stop()
+-----------------------------------stop_set_teardown
+	TEARDOWN ≔ 1
+-----------------------------------stop_teardown_test
+	while (TEARDOWN = 1)
+		;
+	queue_head ≔ 0b2_00
+	queue_tail ≔ 0b2_00
+-----------------------------------stop_idle
+
+/*
+ *	local variable updates:
+ *	-state:
+ *		//Invocation of stop.
+ *		if open_state = open_idle & next(open_state) = open_idle &
+ *			transmit_state = transmit_idle &
+ *			next(transmit_state) = transmit_idle &
+ *			stop_state = stop_idle & turn = software
+ *		then
+ *			stop_state ∈ {stop_write_td, stop_idle}
+ *
+ *		if stop_state = stop_set_teardown & turn = software
+ *		then
+ *			stop_state ≔ stop_teardown_test
+ *
+ *		if stop_state = stop_teardown_test & turn = software
+ *			stop_state ≔ stop_idle
+ *
+ *	global variable updates:
+ *	-TEARDOWN:
+ *		if stop_state = stop_set_teardown &
+ *			next(stop_state) = stop_teardown_test & turn = software
+ *		then
+ *			TEARDOWN ≔ 1
+ *
+ *	-queue_head:
+ *		if stop_state = stop_teardown_test & next(stop_state) = stop_idle &
+ *			turn = software
+ *		then
+ *			queue_head ≔ 0b2_00
+ *
+ *	-queue_tail:
+ *		if stop_state = stop_update_queue & next(stop_state) = stop_idle &
+ *			turn = software
+ *		then
+ *			queue_tail ≔ 0b2_00
+ */

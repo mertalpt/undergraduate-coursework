@@ -1,0 +1,27 @@
+Note: We use symbol ~ for boolean negation operator and symbol LaTeX: \Rightarrow ⇒ for boolean implication operator
+
+ 
+
+Exercise 1
+
+Study the Tseytin transformation of a propositional formula to Conjunctive Normal Form (CNF) and apply it to the following propositional formula:
+
+(a LaTeX: \vee ∨ b) LaTeX: \Rightarrow ⇒ (a LaTeX: \wedge ∧ ~c)
+
+Please explain every step in the transformation process. You may refer to this article (https://en.wikipedia.org/wiki/Tseytin_transformation) for a description of the Tseytin transformation.
+
+(Optional) Explain informally why the size of the resulting formula is linear in the size of the original formula.
+
+ 
+
+Exercise 2
+
+Use the DP algorithm from the lecture 3 slides to determine the (un)satisfiability of the propositional formula resulting from the transformation in Exercise 1.
+
+ 
+
+Exercise 3
+
+Use the CDCL algorithm from the lecture 3 slides to determine the (un)satisfiability of the following propositional formula:
+
+(a LaTeX: \vee ∨ x) LaTeX: \wedge ∧ (b LaTeX: \vee ∨ x) LaTeX: \wedge ∧ (~a LaTeX: \vee ∨ ~b LaTeX: \vee ∨ ~x )  LaTeX: \wedge ∧ (a LaTeX: \vee ∨ c) LaTeX: \wedge ∧ (x LaTeX: \vee ∨ ~y)  LaTeX: \wedge ∧ (c LaTeX: \vee ∨ y)  LaTeX: \wedge ∧ (~x LaTeX: \vee ∨ ~c  LaTeX: \vee ∨ y)  LaTeX: \wedge ∧ (~y LaTeX: \vee ∨ z) LaTeX: \wedge ∧ (~z LaTeX: \vee ∨ ~y)  LaTeX: \wedge ∧ (~c LaTeX: \vee ∨ y)

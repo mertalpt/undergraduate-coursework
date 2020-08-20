@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<drjava version="drjava-20160913-225446">
+  <project autorefresh="false" build="Classes/" root="" work="Sources/">
+    <createjar file=""/>
+    <source>
+      <file active="true" name="Sources/field/Field.java" package="field" timestamp="07-May-2017 22:39:40">
+        <select from="118" to="118"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/matrices/Matrix.java" package="matrices" timestamp="07-May-2017 22:34:03">
+        <select from="118" to="118"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/field/ElectricalField.java" package="field" timestamp="07-May-2017 22:38:01">
+        <select from="118" to="118"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/items/Particle.java" package="items" timestamp="07-May-2017 22:38:01">
+        <select from="118" to="118"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/items/Vector.java" package="items" timestamp="07-May-2017 22:38:01">
+        <select from="118" to="118"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/field/GravitationalField.java" package="field" timestamp="07-May-2017 22:38:29">
+        <select from="118" to="118"/>
+        <scroll column="0" row="0"/>
+      </file>
+    </source>
+    <included/>
+    <excluded/>
+    <collapsed/>
+    <classpath/>
+    <breakpoints/>
+    <watches/>
+    <bookmarks/>
+    <preferences/>
+  </project>
+</drjava>

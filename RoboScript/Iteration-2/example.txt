@@ -1,0 +1,61 @@
+start_funcs
+
+<// Sums the two numbers.
+func sum: (a, b) -> (c)
+{
+    c := a + b;
+}
+
+</
+    Uses the integer division algorithm to calculate
+    the quotient and the remainder.
+
+    </ Surely
+    <// this can handle
+    nested comments. <// />
+/>
+func intDiv: (number, divisor) -> (quotient, remainder)
+{
+    quotient := 0;
+    remainder := 0;
+
+    while (number >= divisor) {
+        number -= divisor;
+        quotient++;
+    }
+
+    remainder := number;
+}
+
+end_funcs
+
+var message := "Welcome to the number thing.\nHere, you enter two integers and we print the quotient from their integer division and the sum of the inputs.";
+var num1 := 20;
+var num2 := 7;
+var num3 := num1 - num2;
+var num4;
+var numList := list[5];
+
+print: (message) -> ();
+print: ("\nEnter your number: ") -> ();
+scan: () -> (num1);
+print: ("\nEnter your divisor: ") -> ();
+scan: () -> (num2);
+
+intDiv: (num1, num2) -> (num3, ignore);
+sum: (num1, num2) -> (num4);
+
+print: ("\nRemainder: ") -> ();
+print: (num3) -> ();
+print: ("\nSum: ") -> ();
+print: (num4) -> ();
+
+print: ("\nSURPRISE ROUND!") -> ();
+
+for (i := 0; 0:10:1) {
+    when (i % 2 = 0) {
+        print: ("\nEVEN!") -> ();
+    } otherwise {
+        print: ("\nODD!") -> ();
+    }
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3O//DTD W3 HTML 2.0//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+ <title>CS-465 Assignment 1</title>
+</head>
+<body width="800px" vlink="#AA00AA" text="#000000" link="#0000FF" bgcolor="#FFFFFF" alink="#FF0000">
+
+<h1>Assignment 1: Cityscape Generator with WebGL</h1>
+<hr>
+<center>
+
+<b>Due Date: November 1, 2018, Thursday</b> 
+<p>
+<b>The demonstration of the assignment will be during the class hour 
+(15:40-16:30) in EA204.</b> 
+</p><p>
+<b>Every student must attend the demonstration in the class.</b>
+</p><p>
+Grade Value: 15 %
+
+</p></center>
+
+<hr>
+<h3> Important Notice</h3>
+<b>
+<p>
+This assignment will NOT be done in groups. Every individual student 
+must do his/her homework.
+</p>
+<p>
+The assignments will be submitted to MOSS (Measure Of Software 
+Similarity), which is an
+automatic system for determining the similarity of programs. It is very 
+successful in identifying the similar codes even if you change variable 
+names, indentation, places of functions, and so on. Any similarities between 
+the programs of students in the class, as well  as any similarities to the 
+programs on the Internet, mandates disciplinary action.
+</p>
+<p>
+You will demonstrate your programs to Dr. Güdükbay in the scheduled time. 
+All the students must be physically available in the demonstrations. Demonstrations
+are a kind of exam. You will be asked questions to understand your contribution to
+the assignments in the demos.
+</p>
+
+<p>
+If you need any assistance, you must request it from the TA. email: 
+aytek.aman@cs
+</p>
+
+<p>
+You must also submit your source codes (including online documentation
+(comments and a README.txt file explaining how it is compiled and run) to
+the TA. You should email (with the Subject CS465 Assignment #1) to Aytek
+Aman (aytek.aman@cs) a single zip file named as
+LastName_Name_CS465_Asst1.zip, containing two directories:
+Source, Executable, and a README.txt file describing how to compile
+and run your assignment.
+</p>
+</b>
+
+<hr>
+<a name="requirements" <="" a="">
+<h3>Requirements</h3>
+
+<p>You will design and implement a simple procedural WebGL app that will
+ paint a very simple cityscape. You need to generate the paintings using
+ these simple parameters:
+
+</p><ul>
+  <li><b>number of houses (<i>n</i>):</b> In the painting, there will be <b><i>n</i></b> houses exactly.</li>
+  <li><b>max number of stories (<i>m</i>):</b> Each house can have stories up to <b><i>m</i></b> (determine the
+number of stories for each house between 1 and m randomly) and will have random colors except the roof and the windows.</li>
+</ul>
+
+Between each pair of houses, there will be a tree.
+There should be a ground plane, sky and the sun.
+Clouds will be drawn interactively. Once you generate the cityscape 
+using the parameters, you should be able to click on the canvas to add 
+corner vertices of a cloud. Once you hit right-click (or some other 
+key), this will indicate that cloud drawing is finished. Users can paint
+ as many clouds as they want.
+
+In the UI, there should be a slider for each parameter (number of houses
+ and max number of stories). There should be a button named "Generate". 
+When pressed, a new cityscape should be generated from scratch. In the 
+following figure sample cityscape drawing is shown (number of houses = 
+4, max number of stories = 3).
+<p></p>
+
+<img src="CS-465%20Assignment%201_files/city.png" alt="Simple cityscape" width="50%">
+
+<p>You need to use suitable GL primitives for each entity (quads, tris etc). <b>Don't hardcode the coordinates of the vertices.</b>
+ For example, circular entities (sun and tree tops) should have at least
+ 32 segments which you can compute using trigonometric functions. You 
+should be careful about the order of drawings (clouds should be in front
+ of the sun etc.).
+
+Don't be afraid to get creative! You could add random variations to 
+entities to generate better looking drawings. Also, additional effects 
+&amp; entities are welcome!
+
+Since each drawing will be random, you might want to save them if one of
+ them looks interesting. Provide a save &amp; load mechanism which saves
+ the properties of the drawings (coordinates and colors of the houses, 
+windows etc.). You should be able to load these files from disk and get 
+the exact drawing. (Don't save the whole framebuffer pixel by pixel!). 
+You can also save the whole drawing by just saving the random seed and 
+the two parameters. However, for this assignment, you are not allowed to
+ do that. </p>
+
+<p>
+<b>Important: Always comment your code. The code will also be checked during the demos.</b>
+
+</p><hr>
+<h3>Grading Criteria</h3>
+<ul>
+<li>Does your program meet the requirements listed above? Your programs will be graded with respect to the number
+of the requirements they satisfy.</li>
+<li>You should construct an instructive user interface for your program.
+ The user interface should be easy to use. There should not be any menus
+ without any information. For example, having an empty window without 
+any information but opening a menu when a mouse button is clicked is not
+ a good user interface. The functionality of the user interface is a 
+part of the grading criteria.</li>
+</ul>
+<hr>
+<h3>Tips</h3>
+<p>
+<b>
+Please make sure your program runs in preparation for the demos.
+</b>
+</p>
+<p>
+You could use simple HTML UI elements or JavaScript (jQuery, AngularJS, jQWidgets,... etc.) UI widget libraries.
+</p>
+There are vast number of WebGL examples on the web. <b>(Do not use these codes directly)</b>.
+ If you use some code for user interface generation or some other 
+purpose with modifications, you must state so at the beginning of that 
+code segment (e.g., method header ) and properly state how you modified 
+that code segment.
+<p>
+	<b>Also DO NOT use the third party wrappers like three.js. Use WebGL from the scratch</b>.
+</p>
+
+</a></body></html>

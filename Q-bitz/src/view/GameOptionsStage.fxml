@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<BorderPane id="mainBorderPane" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" stylesheets="@styles/GameOptions.css, @styles/Buttons.css"
+            fx:controller="controller.GameOptionsController">
+    <fx:define>
+        <ToggleGroup fx:id="difficultyGroup"/>
+        <ToggleGroup fx:id="playerGroup"/>
+        <ToggleGroup fx:id="dimensionGroup"/>
+    </fx:define>
+    <top>
+        <VBox alignment="TOP_CENTER">
+            <Label id="gameOptionsLabel" text="Game Options">
+                <VBox.margin>
+                    <Insets top="75"/>
+                </VBox.margin>
+            </Label>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="70">
+            <BorderPane.margin>
+                <Insets top="75"/>
+            </BorderPane.margin>
+
+            <HBox fx:id="difficultyHBox" spacing="40" alignment="CENTER">
+                <Label text="Difficulty: "/>
+                <RadioButton text="3x3" userData="3" toggleGroup="$difficultyGroup"/>
+                <RadioButton text="4x4" userData="4" toggleGroup="$difficultyGroup" selected="true"/>
+                <RadioButton text="5x5" userData="5" toggleGroup="$difficultyGroup"/>
+            </HBox>
+            <HBox fx:id="playersHBox" spacing="40" alignment="CENTER">
+                <Label text="Players: "/>
+                <RadioButton text="1" userData="1" toggleGroup="$playerGroup" selected="true"/>
+                <RadioButton text="2" userData="2" toggleGroup="$playerGroup"/>
+                <RadioButton text="3" userData="3" toggleGroup="$playerGroup"/>
+                <RadioButton text="4" userData="4" toggleGroup="$playerGroup"/>
+            </HBox>
+            <HBox fx:id="dimensionsHBox" spacing="40" alignment="CENTER">
+                <Label text="Cube: "/>
+                <RadioButton text="3D Cube" userData="3" toggleGroup="$dimensionGroup" selected="true"/>
+                <RadioButton text="2D Cube" userData="2" toggleGroup="$dimensionGroup"/>
+            </HBox>
+            <HBox spacing="40" alignment="CENTER">
+                <Label text="Game Mode: "/>
+                <ComboBox fx:id="gameModesComboBox" value="Pattern Maching" maxWidth="400" minWidth="400">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Pattern Matching"/>
+                            <String fx:value="From Memory"/>
+                            <String fx:value="Against Time"/>
+                            <String fx:value="Painting Puzzle"/>
+                            <String fx:value="Two vs Two"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </HBox>
+            <HBox spacing="40" alignment="CENTER">
+                <Label text="Pattern: "/>
+                <ComboBox fx:id="patternComboBox" value="Legacy Q-Bitz" maxWidth="400" minWidth="400"/>
+            </HBox>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="40" alignment="CENTER">
+            <BorderPane.margin>
+                <Insets bottom="75"/>
+            </BorderPane.margin>
+            <Button fx:id="backToMenuBtn" text="Main Menu" onAction="#backToMainMenu"/>
+            <Button fx:id="startBtn" text="Start" onAction="#startGame"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

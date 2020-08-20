@@ -1,0 +1,6 @@
+# Do not want any output files
+app
+test
+experiment
+*.a
+*.o

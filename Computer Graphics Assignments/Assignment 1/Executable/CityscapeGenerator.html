@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>CS465 Assignment 1</title>
+        <meta charset="utf-8">
+
+        <script id="vertex-shader" type="x-shader/x-vertex">
+            attribute vec2 vPosition;
+            attribute vec3 color;
+            varying vec3 vColor;
+
+            void main() {
+                gl_Position = vec4(vPosition, 0.0, 1.0);
+                vColor = color;
+            }
+        </script>
+
+        <script id="fragment-shader" type="x-shader/x-fragment">
+            precision mediump float;
+            varying vec3 vColor;
+
+            void main() {
+                gl_FragColor = vec4(vColor, 1.0);
+            }
+        </script>
+
+        <script type="text/javascript" src="../Source/Common/webgl-utils.js"></script>
+        <script type="text/javascript" src="../Source/Common/initShaders.js"></script>
+        <script type="text/javascript" src="../Source/Common/MV.js"></script>
+        <script type="text/javascript" src="../Source/CityscapeGenerator.js"></script>
+
+        <style>
+            #glCanvas{border:1px solid black;}
+        </style>
+
+    </head>
+
+    <body>
+        <canvas id="glCanvas" width="640" height="480">
+            Your browser does not support the HTML5 canvas element.
+        </canvas>
+        <br>
+
+        <button id="generateButton" onclick="generate()">Generate Scene</button>
+        <button id="saveButton" onclick="save()">Save Scene</button>
+        <button id="loadButton" onclick="load()">Load Scene</button>
+        <input type="file" id="fileExplorer"/>
+        <br>
+
+        <input type="range" id="numHouses" min="1" value="3" max="5" step="1"
+            oninput="updateHouses(value)">
+        <label for="numHouses">Number of Houses: </label>
+        <output for="numHouses" id="numHousesOut">3</output>
+        <br>
+
+        <input type="range" id="maxStory" min="1" value="5" max="9" step="1"
+            oninput="updateStories(value)">
+        <label for="maxStory">Maximum Number of Stories for Each House: </label>
+        <output for="maxStory" id="maxStoryOut">5</output>
+        <br>
+
+    </body>
+</html>

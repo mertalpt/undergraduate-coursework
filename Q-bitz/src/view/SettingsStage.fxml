@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" id="mainBorderPane"
+            fx:controller="controller.SettingsController" stylesheets="@styles/Settings.css, @styles/Buttons.css">
+    <top>
+        <VBox alignment="CENTER">
+            <Label id="settingsLabel" text="Settings">
+                <VBox.margin>
+                    <Insets top="75"/>
+                </VBox.margin>
+            </Label>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER" spacing="60" id="settingsVBox">
+            <HBox alignment="CENTER" spacing="100">
+                <Label text="Music"/>
+                <CheckBox fx:id="musicBtn" />
+            </HBox>
+            <HBox alignment="CENTER" spacing="100">
+                <Label text= "Sound"/>
+                <CheckBox fx:id="soundBtn"/>
+            </HBox>
+        </VBox>
+    </center>
+
+    <bottom>
+        <VBox alignment="BOTTOM_LEFT">
+            <Button text="Main Menu" fx:id="mainMenuBtn" onAction="#backToMainMenu">
+                <VBox.margin>
+                    <Insets top="40" left="40" right="40" bottom="40"></Insets>
+                </VBox.margin>
+            </Button>
+        </VBox>
+    </bottom>
+</BorderPane>

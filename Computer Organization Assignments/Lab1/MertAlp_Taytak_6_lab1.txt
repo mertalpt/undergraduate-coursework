@@ -1,0 +1,860 @@
+## Lab 1 Preliminary Work
+## Program 1
+## Enter array elements up to size 20 then print
+
+	.text
+	.globl __start
+	
+__start:
+	# Print prompt for array size
+	la $a0, pmt1
+	li $v0, 4
+	syscall
+	
+	# Get array size
+	li $v0, 5
+	syscall
+	sw $v0, size
+	
+	# Invalid size handling
+	
+	li $a0, -1
+	
+	blt $v0, 1, array_size_error
+	bge $v0, 20, array_size_error
+	
+	li $a0, 0
+	
+	# Get array elements	
+	lw $t0, size
+	li $t1, 0 # index
+	li $t2, 0 # address index
+	
+array_size_error:
+	
+	bne $a0, -1, write_loop
+	
+	la $a0, pmt0
+	li $v0, 4
+	syscall
+	
+	j __start
+	
+write_loop:
+	# Loop exit condition
+	bge $t1, $t0, print_unreversed
+	
+	# Print prompt for next element
+	la $a0, pmt2
+	li $v0, 4
+	syscall
+	
+	# Get next element
+	li $v0, 5
+	syscall
+	sw $v0, arr($t2)
+	
+	# Loop iteration handling
+	addi $t1, $t1, 1
+	addi $t2, $t2, 4
+	j write_loop
+	
+# Print array first
+print_unreversed:
+	j print
+	
+prepare_to_reverse:
+	li $a1, -1
+
+	# Prepare for reversing the array
+	move $t3, $t0
+	subi $t3, $t3, 1
+	li $t4, 4 # Multiplication constant
+	
+	# $t0 = array size
+	li $t1, 0 # array index from left
+	mul $t2, $t3, $t4 # array index from right
+	
+# Reverse array
+reverse:
+	# Loop condition
+	bge $t1, $t2, print
+	
+	# Swap logic, t3 holds value from left, t4 value from right
+	lw $t3, arr($t1)
+	lw $t4, arr($t2)
+	
+	sw $t3, arr($t2)
+	sw $t4, arr($t1)
+	
+	# Increment left index and decrement right index
+	addi $t1, $t1, 4
+	subi $t2, $t2, 4
+	
+	j reverse
+	
+# Print array
+print:
+	# Print prompt for printing array
+	la $a0, pmt3
+	li $v0, 4
+	syscall
+	
+	# Prepare next loop
+	# t0 = array size
+	li $t1, 0 # array index
+	li $t2, 0 # address index
+	
+print_loop:
+	# Loop exit condition
+	beq $t0, $t1, exit_print_loop
+
+	# Get next element
+	lw $a0, arr($t2)
+	li $v0, 1
+	syscall
+	
+	# Loop iteration handling
+	addi $t1, $t1, 1
+	addi $t2, $t2, 4
+	
+	# If not last element
+	blt $t1, $t0, print_comma
+	
+	j print_loop
+
+# Prints comma in between numbers while printing the array
+print_comma: 
+	bge $t1, $t0, exit_print_loop
+	
+	la $a0, comma
+	li $v0, 4
+	syscall
+	
+	j print_loop
+
+exit_print_loop:
+	
+	bne $a1, -1, prepare_to_reverse
+	
+	# End of Program
+	li $v0, 10
+	syscall
+	
+	.data
+pmt0:	.asciiz "Array size invalid. Try again.\n"
+pmt1:	.asciiz "Enter the size of your array: "
+pmt2:	.asciiz "Enter next element: "
+pmt3:	.asciiz "\nPrinting array: \n"
+comma:	.asciiz ", "
+size:	.word	0
+arr:	.space	80 # Preallocate array for 20 elements
+
+## Lab 1 Preliminary Work
+## Program 2
+## x = (c - d) & 2
+
+	.text
+	.globl __start
+	
+__start:
+	la $a0, prompt1
+	li $v0, 4
+	syscall # Output prompt
+	
+	li $v0, 5
+	syscall # Take input c
+	sw $v0, c
+	
+	la $a0, prompt2
+	li $v0, 4
+	syscall # Output prompt
+	
+	li $v0, 5
+	syscall # Take input d
+	sw $v0, d
+	
+	# Inputs are taken
+	
+	lw $t0, c # c into t0
+	lw $t1, d # d into t1
+	sub $t2, $t0, $t1 # t2 gets t0 - t1 MEANING t2 = c - d
+	andi $t3, $t2, 1 # If (c - d) ends with bit 1, result is 1, else result is 0
+	
+	# Processing is done
+	
+	la $a0, prompt3
+	li $v0, 4
+	syscall # Output prompt
+	
+	move $a0, $t3
+	li $v0, 1
+	syscall # Print result
+	
+	# Result is printed
+	
+	li $v0, 10
+	syscall # End of program	
+
+	.data
+c:	.word 0
+d:	.word 0
+prompt1:.asciiz "Please enter c: "
+prompt2:.asciiz "Please enter d: "
+prompt3:.asciiz "Result of (c - d) % 2 is "
+
+##
+## Program1.asm - prints out "hello world"
+##
+##	a0 - points to the string
+##
+
+#################################
+#					 	#
+#		text segment		#
+#						#
+#################################
+
+	.text		
+	.globl __start 
+
+__start:		# execution starts here
+	la $a0,str	# put string address into a0
+	li $v0,4	# system call to print
+	syscall	#   out a string
+
+	li $v0,10  # system call to exit
+	syscall	#    bye bye
+
+
+#################################
+#					 	#
+#     	 data segment		#
+#						#
+#################################
+
+	.data
+str:	.asciiz "Hello TA\n"
+n:	.word	10
+
+##
+## end of file Program1.asm
+
+##
+## Program2.asm asks user for temperature in Celsius,
+##  converts to Fahrenheit, prints the result.
+##
+##	v0 - reads in Celsius
+##	t0 - holds Fahrenheit result
+##	a0 - points to output strings
+##
+
+#################################
+#					 	#
+#		text segment		#
+#						#
+#################################
+
+	.text		
+	.globl __start	
+
+__start:
+	la $a0,prompt	# output prompt message on terminal
+	li $v0,4		# syscall 4 prints the string
+	syscall
+
+	li $v0, 5		# syscall 5 reads an integer
+	syscall
+
+	mul $t0,$v0,9	# to convert,multiply by 9,
+	div $t0,$t0,5	# divide by 5, then
+	add $t0,$t0,32	# add 32
+
+	la $a0,ans1	# print string before result
+	li $v0,4
+	syscall
+
+	move $a0,$t0	# print integer result
+	li $v0,1		# using syscall 1
+	syscall
+
+	la $a0,endl	# system call to print
+	li $v0,4		# out a newline
+	syscall
+
+	li $v0,10		# system call to exit
+	syscall		#    bye bye
+
+
+#################################
+#					 	#
+#     	 data segment		#
+#						#
+#################################
+
+	.data
+prompt:	.asciiz "Enter temperature (Celsius): "
+ans1:		.asciiz "The temperature in Fahrenheit is "
+endl:		.asciiz "\n"
+
+##
+## end of file Program2.asm
+
+
+##
+##	Program3.asm is a loop implementation
+##	of the Fibonacci function
+##        
+
+#################################
+#					 	#
+#		text segment		#
+#						#
+#################################
+
+	.text		
+.globl __start
+ 
+__start:			# execution starts here
+	li $a0,5		# to calculate fib(n)
+	jal fib		# call fib
+	move $a0,$v0	# print result
+	li $v0, 1
+	syscall
+
+	la $a0,endl		# print newline
+	li $v0,4
+	syscall
+
+	li $v0,10
+	syscall		# bye bye
+
+#------------------------------------------------
+
+
+fib:	move $v0,$a0	# initialise last element
+	blt $a0,2,done	# fib(0)=0, fib(1)=1
+
+	li $t0,0		# second last element
+	li $v0,1		# last element
+
+loop:	add $t1,$t0,$v0	# get next value
+	move $t0,$v0	# update second last
+	move $v0,$t1	# update last element
+	sub $a0,$a0,1	# decrement count
+	bgt $a0,1,loop	# exit loop when count=0
+done:	jr $ra
+
+#################################
+#					 	#
+#     	 data segment		#
+#						#
+#################################
+
+	.data
+endl:	.asciiz "\n"
+
+##
+## end of Program3.asm
+
+## Program for Part 4 of Lab 1
+## ((A/B) - (C+D)) % E
+## Mert Alp Taytak
+
+	.text
+	.globl __start
+	
+__start:
+	
+	# Print prompt
+	la $a0, str1
+	li $v0, 4
+	syscall
+	
+	bounceFromError:
+	
+	# Get A, B, C, D, E
+	li $t0, 5 # Array size
+	li $t1, 0 # Index counter
+	li $t2, 0 # Address counter
+	
+	loop: # For i = 0, i < 5, i++
+	
+	bge $t1, $t0, endLoop # Break condition
+	
+	# Print prompt
+	la $a0, str2
+	li $v0, 4
+	syscall
+	
+	# Get input
+	li $v0, 5
+	syscall
+	
+	# Store to array
+	sw $v0, arr($t2)
+	
+	# Increment counters
+	addi $t1, $t1, 1
+	addi $t2, $t2, 4
+	
+	j loop
+	
+	endLoop:
+	
+	# Load values to saved temporaries
+	lw $s0, arr    # A
+	lw $s1, arr+4  # B
+	lw $s2, arr+8  # C
+	lw $s3, arr+12 # D
+	lw $s4, arr+16 # E
+	
+	# $t0 = (A / B)
+	move $a0, $s0
+	move $a1, $s1
+	jal division
+	move $t0, $v0
+	
+	# $t1 = (C + D)
+	move $a0, $s2
+	move $a1, $s3
+	jal addition
+	move $t1, $v0
+	
+	# $t2 = (A/B) - (C+D)
+	move $a0, $t0
+	move $a1, $t1
+	jal subtraction
+	move $t2, $v0
+	
+	# $t3 = ((A/B) - (C*D)) % E
+	move $a0, $t2
+	move $a1, $s4
+	jal remainder
+	move $t3, $v0
+	
+	# Print result
+	la $a0, str3
+	li $v0, 4
+	syscall
+	
+	move $a0, $t3
+	li $v0, 1
+	syscall
+	
+	# End of program
+	j endOfProgram
+
+endOfProgram:
+
+	li $v0, 10
+	syscall
+	
+divByZeroErr:
+
+	la $a0, str4
+	li $v0, 4
+	syscall
+	
+	j bounceFromError
+	
+addition: # Returns A + B in $v0
+
+	# $a0 = A
+	# $a1 = B
+	
+	add $v0, $a0, $a1
+	
+	# Return value in $v0
+	jr $ra
+	
+subtraction: # Returns A - B in $v0
+
+	# $a0 = A
+	# $a1 = B
+	
+	sub $v0, $a0, $a1
+	
+	# Return value in $v0
+	jr $ra
+		
+multiplication: # Returns A * B in $v0
+
+	# $a0 = A
+	# $a1 = B
+	
+	mul $v0, $a0, $a1
+	
+	# Return value in $v0
+	jr $ra
+	
+division: # Returns A / B in $v0
+	
+	# Division by 0 handling
+	beq $a1, 0, divByZeroErr
+	
+	# $a0 = A
+	# $a1 = B
+	
+	div $v0, $a0, $a1
+	
+	# Return value in $v0
+	jr $ra
+	
+remainder: # Return A % B in $v0
+
+	# Division by 0 handling
+	beq $a1, 0, divByZeroErr
+	
+	# $a0 = A
+	# $a1 = B
+	
+	rem $v0, $a0, $a1
+	
+	# Restrain result to positive values
+	blt $v0, 0, remainderToPos
+	
+	# Return value in $v0
+	jr $ra
+	
+	remainderToPos:
+	
+	# Add B once to restrain result to positive
+	add $v0, $v0, $a1
+	
+	# Return value in $v0
+	jr $ra
+
+	.data
+arr:	.space 20
+str1:	.asciiz "This program computes ((A/B) - (C+D)) % E\nPlease enter your numbers in the order: A, B, C, D, E\n-----\n"
+str2:	.asciiz "\tEnter your number: "
+str3:	.asciiz "-----\nResult: "
+str4:	.asciiz "-----\nDivision by zero error! One of the inputs is invalid. Please try again.\n-----\n"
+
+## Program for Part 5 of Lab 1
+## Array operations with a menu
+## Written by Mert Alp Taytak
+	
+	.text
+	.globl __start
+	
+__start:	# Set up the program
+
+	# Ask and get array size
+	la $a0, strSize
+	li $v0, 4
+	syscall
+	
+	li $v0, 5
+	syscall
+	sw $v0, size
+	
+	# Check if array size is valid
+	
+	li $t0, -1
+	
+	bgt $v0, 100, sizeInvalid
+	blt $v0, 1, sizeInvalid
+	
+	li $t0, 0
+	
+	# Set $s0 to size
+	move $s0, $v0
+	
+	# Set $s1 to 0, $s1 will be used as a counter
+	li $s1, 0
+	
+	# Set $s2 to 0, $s2 will be used as an address register
+	li $s2, 0
+	
+	# Set $a0 to address of string to use in the following loop
+	la $a0, strNumber
+	
+sizeInvalid:	# Handles invalid array size
+
+	bne $t0, -1, populationLoop
+	la $a0, strInvalid
+	li $v0, 4
+	syscall
+	j __start
+	
+populationLoop:	# Loop used to populate array
+	
+	# Ask and get next element
+	li $v0, 4
+	syscall
+	
+	li $v0, 5
+	syscall
+	
+	sw $v0, arr($s2)
+	
+	# Increment counter and address register
+	addi $s1, $s1, 1
+	addi $s2, $s2, 4
+	
+	# Loop condition
+	blt $s1, $s0, populationLoop
+
+menuLoop:	# Menu loop
+
+	li $v0, 4 # USed to print strings in the following code
+
+	# Print menu
+	la $a0, strMenu
+	syscall
+	
+	# Print option A
+	la $a0, strMenuA
+	syscall
+	
+	# Print option B
+	la $a0, strMenuB
+	syscall
+	
+	# Print option C
+	la $a0, strMenuC
+	syscall
+	
+	# Print option D
+	la $a0, strMenuD
+	syscall
+	
+	# Print selection prompt
+	la $a0, strSelection
+	syscall
+	
+	# Get user input
+	li $v0, 12
+	syscall
+	
+	# Branching to options
+	
+	beq $v0, 'a', menuA
+	beq $v0, 'b', menuB
+	beq $v0, 'c', menuC
+	beq $v0, 'd', menuD
+	
+	j invalidInput # If no match is found then the input is invalid
+
+menuA:		# Menu option A: Find summation of numbers stored in the array which is greater than an input number
+
+	# Ask and get number
+	la $a0, strNumber
+	li $v0, 4
+	syscall
+	
+	li $v0, 5
+	syscall # $v0 is now number
+	
+	move $a1, $v0
+	j sumGreater
+	
+	returnToMenuA: # $s4 hold the value to print
+	
+	la $a0, strGreater
+	li $v0, 4
+	syscall
+	
+	move $a0, $s4
+	li $v0, 1
+	syscall
+	
+	j menuLoop
+
+menuB:		# Menu option B: Find summation of even and odd numbers and display them
+
+	j sumOddEven
+
+	returnToMenuB:
+	
+	la $a0, strOdd
+	li $v0, 4
+	syscall
+	
+	move $a0, $s7
+	li $v0, 1
+	syscall
+	
+	la $a0, strEven
+	li $v0, 4
+	syscall
+	
+	move $a0, $s6
+	li $v0, 1
+	syscall
+	
+	# Reset sum registers	
+	andi $s6, 0
+	andi $s7, 0
+	
+	j menuLoop	
+
+menuC:		# Menu option C: Display the number of occurrences of the array elements divisible by a certain input number
+
+	# Get input number
+	la $a0, strNumber
+	li $v0, 4
+	syscall
+	
+	li $v0, 5
+	syscall
+	
+	move $a1, $v0 # Argument of countDivisibles for the modulo
+	
+	j countDivisibles
+	
+	returnToMenuC:
+	
+	la $a0, strDivisible # Print prompt
+	li $v0, 4
+	syscall
+	
+	move $a0, $s5 # Print result
+	li $v0, 1
+	syscall
+	
+	j menuLoop
+
+menuD:		# Menu option D: Quit
+
+	j endOfProgram
+	
+sumGreater:	# Finds the sum of numbers in the array greater than given number
+
+	# $s0 is array size
+	li $s1, 0 # index counter
+	# $a1 is input number
+	
+	sumReturn:
+	
+	bge $s1, $s0, returnToMenuA # End of loop if index exceeds size
+	
+	move $a0, $s1
+	jal elementAtIndex # $v0 is now element at given index
+	
+	# Increment index counter
+	add $s1, $s1, 1
+	
+	# Add to sum if condition is met
+	move $a0, $v0
+	bgt $a0, $a1, adderFour
+	
+	j sumReturn
+
+sumOddEven:	# Finds sum of odd numbers in the array
+
+	# $s0 is size
+	li $s1, 0 # index counter
+	li $a1, 2 # argument of modulo
+	
+oddEvenHelper:	# s1 is index counter, $v1 is sum
+
+	bge $s1, $s0, returnToMenuB # End of loop if index exceeds size
+	
+	move $a0, $s1
+	jal elementAtIndex # $v0 is element at index now
+	
+	move $s2, $v0 # Keep value in $s2 as $v0 will change
+	move $a0, $v0 # Move value to argument
+	jal modulo # $v0 is now remainder
+	
+	move $a0, $s2 # Pass element as argument to addToSum functions
+	
+	beq $v0, 0, adderTwo
+	beq $v0, 1, adderOne
+	
+	returnToHelper: # Return address
+	
+	# Increment index
+	add $s1, $s1, 1
+
+	j oddEvenHelper # Loop
+
+countDivisibles:# Find number of numbers that are divisible by the given number, !!! $a1 must be set to divisor number BEFORE the call !!!
+
+	# $s0 is array size
+	li $s1, 0 # index counter
+	
+	divisibleReturn:
+	
+	bge $s1, $s0, returnToMenuC # End of loop if index exceeds size
+	
+	move $a0, $s1
+	jal elementAtIndex # $v0 is now element at index
+	
+	move $s2, $v0 # Keep value to sum later if necessary
+	move $a0, $v0 # Pass value as argument to modulo
+	jal modulo # $v0 is now the remainder
+	
+	# Increment index
+	add $s1, $s1, 1
+	
+	# If remainder is not 0 repeat
+	bne $v0, 0, divisibleReturn
+	
+	# Else add to sum
+	j adderThree	
+
+modulo:		# Finds remainder of a number divided by another, CHANGES $v0
+
+	remu $v0, $a0, $a1 # $v0 = $a0 % $a1
+	jr $ra # Return to caller
+		
+invalidInput:
+
+	la $a0, strInvalid
+	li $v0, 4
+	j menuLoop
+	
+elementAtIndex:	# Gives element at given index in $v0
+
+	# $a0 is index
+	mul $t0, $a0, 4
+	lw $v0, arr($t0)
+	jr $ra
+	
+adderOne:	# Adds $a0 to $s7
+
+	add $s7, $s7, $a0
+	j returnToHelper
+
+adderTwo:	# Adds $a0 to $s6
+
+	add $s6, $s6, $a0
+	j returnToHelper
+	
+adderThree:	# Adds 1 to $s5
+
+	add $s5, $s5, 1
+	j divisibleReturn
+	
+adderFour:	# Adds $a0 to $s4
+
+	add $s4, $s4, $a0
+	j sumReturn
+	
+endOfProgram:	# End of program
+	
+	li $v0, 10
+	syscall
+
+	.data
+arr:		.space 400
+size:		.word 0 # Holds array size
+strSize:	.asciiz "\nEnter array size: "
+strInvalid:	.asciiz "\nSize invalid, please pick a number between 1 and 100\n"
+strNumber:	.asciiz "\nEnter your number: "
+strSum:		.asciiz "\nSum is: "
+strOccurence:	.asciiz "\nNumber of occurences are: "
+strMenu:	.asciiz "\n-----\nMenu\n-----\n"
+strMenuA:	.asciiz "\ta. Find summation of numbers stored in the array which is greater than an input number.\n"
+strMenuB:	.asciiz "\tb. Find summation of even and odd numbers and display them.\n"
+strMenuC:	.asciiz "\tc. Display the number of occurrences of the array elements divisible by a certain input number.\n"
+strMenuD:	.asciiz "\td. Quit.\n"
+strSelection:	.asciiz "\nPlease enter 'a' or 'b' or 'c' or 'd' for your option of choice: "
+strOdd:		.asciiz "\nSum of all odd numbers: "
+strEven:	.asciiz "\nSum of all even numbers: "
+strDivisible:	.asciiz "\nNumber of numbers divisible by your number: "
+strGreater:	.asciiz "\nSum of numbers greater than your number: "

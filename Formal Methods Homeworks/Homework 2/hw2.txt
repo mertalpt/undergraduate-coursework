@@ -1,0 +1,21 @@
+Consider the following program with annotated while loop:
+
+y = 0;
+{x ≥ 0 ∧ x + y = x0}
+while (x > 0) {
+   x = x - 1;
+   y = y + 1
+}
+
+and the contract:
+
+(x ≥ 0 ∧ x = x0, y = x0)
+
+Show that the program meets the contract by computing a verification condition. The verification condition should be computed with two techniques (see Lecture 2 slides):
+
+    1. Dilian’s Verification Condition Generator (VC-function) [[Page 18 has what I need]]
+    2. Weakest Precondition Calculation for the Intermediate Language (wp-function) [[Page 25 has what I need]]
+
+Show clearly all steps in the computation, applying one rule at a time (and indicate which).
+
+Compare the two resulting formulas.

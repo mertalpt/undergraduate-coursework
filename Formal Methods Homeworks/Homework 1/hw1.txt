@@ -1,0 +1,48 @@
+Write a C-program that implements a queue of an answering machine with space for 100 messages. The queue should be able to store messages consisting of:
+
+-a first name, of at most 15 characters,
+-a last name, of at most 25 characters,
+-a social security number of length 10.
+
+The C program shall have the following two functions:
+
+-void copy(char s1[], int n1, char s2[], int n2), which copies as many characters as possible in the array s2 to the array s1, where n1 is the length of s1 and n2 is the length of s2.
+-void leave_message(char first_name[], int n1, char last_name[], int n2, char social_security_number[], int n3). Leave message should work as follows. If there is free space in the queue, then first_name, of length n1 => 0, last_name, of length n2 => 0, and social_security_number, of length n3 => 0, are copied into the queue, by means of the copy function, where the previous entries in the queue are unchanged. The return value is 0 to denote success. If there is no free space in the queue, then the queue is unchanged and -1 is returned to denote failure.
+
+It is assumed that all arrays are non-overlapping.
+
+Annotate your functions and verify it by means of the WP plugin of Frama-C.
+
+To get a bonus point, it is sufficient to write the C program and make a serious attempt to annotate it such that WP accepts the annotations. It is not required that Frama-C accepts all annotations.
+
+It might be useful to read up on the following builtin constructs of ACSL (see the specification at https://frama-c.com/download/acsl_1.13.pdf): \separated, \forall, \at, assigns, loop invariant, loop assigns, and \result. Also the behavior construct might be useful.
+
+To do the peer-review, print and bring your solution to class (with your name on it).
+
+The assignment is individual, but can be discussed with other students to a reasonable extent.
+
+/*@
+    requires n1 > 0 && \valid(first_name+(0..n1-1));
+    requires n2 > 0 && \valid(last_name+(0..n2-1));
+    requires n3 > 0 && \valid(social_security_number+(0..n3-1));
+    requires \separated(first_name, last_name, social_security_number);
+
+    behavior has_no_space:
+        assumes queue.count >= SIZE_QUEUE;
+        ensures \result == -1;
+        assigns \nothing;
+
+    behavior has_space:
+        assumes queue.count < SIZE_QUEUE;
+        ensures \let oldc = \old(queue.count);
+                \result == 0 &&
+                queue.count == oldc + 1 &&
+                is_copied((char*)(queue.messages[oldc].first_name), first_name, \min(n1, SIZE_FIRST_NAME)) &&
+                is_copied((char*)(queue.messages[oldc].last_name), last_name, \min(n2, SIZE_LAST_NAME)) &&
+                is_copied((char*)(queue.messages[oldc].ssn), social_security_number, \min(n3, SIZE_SSN));
+        assigns queue.count,
+                queue.messages[queue.count],
+                queue.messages[queue.count].first_name[0..\min(n1,SIZE_FIRST_NAME)-1],
+                queue.messages[queue.count].last_name[0..\min(n2,SIZE_LAST_NAME)-1],
+                queue.messages[queue.count].ssn[0..\min(n3,SIZE_SSN)-1];
+*/

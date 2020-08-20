@@ -1,0 +1,2 @@
+- To execute the program run the .html file in the EXECUTABLE directory.
+- It has been tested only in Chrome and may not work properly in other browsers.

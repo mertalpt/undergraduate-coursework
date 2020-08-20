@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2017.2 (64-bit)
+# SW Build 1909853 on Thu Jun 15 18:39:09 MDT 2017
+# IP Build 1909766 on Thu Jun 15 19:58:00 MDT 2017
+# Start of session at: Sat Dec  9 13:19:03 2017
+# Process ID: 864
+# Current directory: D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Example_Project_01/keypad_7seg/keypadExample
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent8352 D:\Documents\Bilkent\Year 2 Semester 1\CS223\Project\Project_files\Example_Project_01\keypad_7seg\keypadExample\keypadExample.xpr
+# Log file: D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Example_Project_01/keypad_7seg/keypadExample/vivado.log
+# Journal file: D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Example_Project_01/keypad_7seg/keypadExample\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project {D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Example_Project_01/keypad_7seg/keypadExample/keypadExample.xpr}
+update_compile_order -fileset sources_1

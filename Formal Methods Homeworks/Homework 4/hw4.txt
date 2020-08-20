@@ -1,0 +1,61 @@
+Exercise 1
+
+Use the congruence closure algorithm from the lecture slides to determine the (un)satisfiability
+
+of the following SMT formulae:
+
+    F1 = {a = c, d = f(f(c)), f(c) = f(f(f(b))),  f(b) = a, d ≠ f(c)}
+    F2 = {a = b, c = f(d), f(b) = g(a), d = c, g(b) = d, g(c) ≠f(f(a))}
+
+ 
+
+Exercise 2
+
+Show that the following combination of Linear Arithmetic over Reals (LAR) and Uninterpreted Functions (UF) is (un)satisfiable using the Nelson-Oppen algorithm (convex case) from lecture slides.
+
+( b ≥ 0 ) ∧ ( f(a) = c ) ∧ ( f(a) ≥ a ) ∧ ( a − b ≥ c ) ∧ ( f(c) ≥ 0 )
+
+Explain carefully each step of the algorithm.
+
+ 
+
+Exercise 3
+
+Use the Z3 SMT solver to encode and check (un)satisfiability of formulae in Exercise 1 and 2. 
+
+Print out your solution and bring it to the peer review session.
+
+(cf. Z3 web interface (Links to an external site.) and Z3 tutorial (Links to an external site.))
+
+ 
+
+Exercise 4
+
+Consider the following 2 implementations of simple string sanitizers to prevent XSS attacks (Links to an external site.).
+
+String sanitize1(String a){
+  String v1 = "<";
+  if (a.contains(v1)){
+    int v2 = a.indexOf(v1);
+    String v3 = a.subString(0,v2);
+    return v3;
+  }
+  return a;
+}
+
+ 
+
+String sanitize2(String a){
+  String v1 = "<";
+  if (a.contains(v1)){
+    String v2 = a.replace(v1,"");
+    return v2;
+  }
+  return a;
+}
+
+The goal of this exercise is to synthesize (if possible) an input String a that escapes the sanitizer, and it returns the String <script> as result. You should formalize each sanitizer as a satisfiability problem over the String theory in Z3 (Links to an external site.), and use the Z3 solver to generate such input String. The meaning of string operations used in both sanitizers in similar to the corresponding operations in Z3.
+
+    Do these sanitizers prevent the return of String <script> for any input String a? If not, what value for input String a would result in returning String <script> ?
+    Print out your solution and bring it to the peer review session.
+

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<drjava version="drjava-20160913-225446">
+  <project autorefresh="false" build="Classes/" root="" work="Sources/">
+    <createjar file=""/>
+    <source>
+      <file active="true" name="Sources/VisualTestSimulation.java" package="" timestamp="10-May-2017 22:21:49">
+        <select from="428" to="428"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/TestVector.java" package="" timestamp="09-May-2017 11:01:07">
+        <select from="428" to="428"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/items/Vector.java" package="items" timestamp="09-May-2017 11:05:29">
+        <select from="428" to="428"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/TestParticle.java" package="" timestamp="09-May-2017 11:12:02">
+        <select from="428" to="428"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/field/ElectricalField.java" package="field" timestamp="09-May-2017 14:03:19">
+        <select from="428" to="428"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/matrices/Matrix.java" package="matrices" timestamp="10-May-2017 20:23:50">
+        <select from="428" to="428"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/TestSimulation.java" package="" timestamp="10-May-2017 20:25:54">
+        <select from="428" to="428"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/TestElectricalField.java" package="" timestamp="10-May-2017 20:36:38">
+        <select from="428" to="428"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/items/Particle.java" package="items" timestamp="10-May-2017 22:10:23">
+        <select from="428" to="428"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/field/Field.java" package="field" timestamp="10-May-2017 22:20:38">
+        <select from="428" to="428"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/SimulationModel.java" package="" timestamp="10-May-2017 22:23:10">
+        <select from="428" to="428"/>
+        <scroll column="0" row="0"/>
+      </file>
+      <file name="Sources/SimulationView.java" package="" timestamp="10-May-2017 22:25:02">
+        <select from="428" to="428"/>
+        <scroll column="0" row="0"/>
+      </file>
+    </source>
+    <included/>
+    <excluded/>
+    <collapsed/>
+    <classpath/>
+    <breakpoints/>
+    <watches/>
+    <bookmarks/>
+    <preferences/>
+  </project>
+</drjava>

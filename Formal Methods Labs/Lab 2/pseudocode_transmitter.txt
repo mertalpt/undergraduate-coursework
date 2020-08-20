@@ -1,0 +1,379 @@
+/*
+ *	Formal transmitter model
+ *
+ *	The model of the transmitter consists of three functions describing the
+ *	computation steps of initialization, transmission and teardown:
+ *	initialization_step(), transmission_step(), and teardown_step(). Each
+ *	invocation describes one step, which depends on the current state.
+ */
+
+/*
+ *	Global state components relevant to several operations of the transmitter
+ *	model:
+ *	-RESET: 1-bit register, initial value is zero. Written by software to 1 to
+ *	 initiate a reset operation, and cleared by the transmitter when the reset
+ *	 is complete. Initiating a reset when the transmitter is not idle is an
+ *	 error.
+ *	-HDP: 2 bit register, inital value is unknown. Written by software to the
+ *	 address of the buffer descriptor addressing the first frame to transmit,
+ *	 which starts transmission. Writing HDP to any value except zero during
+ *	 initialization is an error. Writing HDP when initialization, transmission
+ *	 or teardown are not idle, is an error.
+ *	-TEARDOWN: 1-bit register, initial value is zero. Written by software to 1
+ *	 to initiate teardown and cleared by the transmitter when teardown is
+ *	 complete.
+ *	 Writing TEARDOWN during initialization or teardown is an error.
+ *	-HW_MEMORY_NDP: 4 entries of 2 bits each. First entry is unusable. Stores
+ *	 the next descriptor pointer field of the buffer descriptor at the
+ *	 corresponding entry.
+ *	-HW_MEMORY_BP: 4 entries of 2 bits each. First entry is unusable. Stores
+ *	 the buffer pointer field of the buffer descriptor at the corresponding
+ *	 entry.
+ *	-HW_MEMORY_BL: 4 entries of 2 bits each. First entry is unusable. Stores
+ *	 the buffer length field of the buffer descriptor at the corresponding
+ *	 entry.
+ *	-HW_MEMORY_OWN: 4 entries of 1 bit each. First entry is unusable. Stores
+ *	 the ownership field of the buffer descriptor at the corresponding entry.
+ *	-HW_MEMORY_EOQ: 4 entries of 1 bit each. First entry is unusable. Stores
+ *	 the end of queue field of the buffer descriptor at the corresponding
+ *	 entry.
+ *	-it_state: initial value it_idle.
+ *	-tx_state: initial value tx_idle.
+ *	-td_state: initial value td_idle.
+ */
+
+//Macros:
+HW_MEMORY_START ≔ 0b2_01;			//First index of transmitter memory is 1.
+HW_MEMORY_END ≔ 0b2_11;				//Last index of transmitter memory is 3.
+RAM_START ≔ 0b2_01;					//First index of system memory is 1.
+RAM_END ≔ 0b2_10;					//Last index of system memory is 2.
+
+/*
+ *	Initialization
+ *
+ *	Initialization works as follows. Write 1 to RESET. The transmitter then
+ *	resets itself. When the transmitter has finished the resetting, RESET is
+ *	set to 0. Then the software writes zero to HDP. This sequence of steps
+ *	initializes the transmitter. Any other sequence operations during
+ *	initialization is erronous.
+ *
+ *	State components:
+ *	-it_state : {it_idle, it_resetting, it_waiting_hdp}, initial value is
+ *	 idle:
+ *		#it_idle: Initialization is idle.
+ *		#it_resetting: Software has initiated a transmitter reset and the
+ *		 transmitter is resetting itself.
+ *		#it_waiting_hdp: The transmitter has reset itself and is waiting for
+ *		 the software to initialize the HDP register.
+ */
+initialization_step()
+	if (it_state = it_idle)
+		return
+	else if (it_state = it_resetting)
+		RESET ≔ 0b1_0
+		it_state ≔ it_waiting_hdp
+		return
+	else if (it_state = it_waiting_hdp)
+		return
+
+/*
+ *	local variable updates (relevant only to this part of the transmitter model):
+ *	-it_state:
+ *		//If software sets the RESET register, as is done by the open function.
+ *		if it_state = it_idle & RESET = 0b1_0 & next(RESET) = 0b1_1 &
+ *			open_state = open_set_reset & next(open_state) = open_reset_test &
+ *			turn = software
+ *		then
+ *			it_state ≔ it_resetting
+ *
+ *		if it_state = it_resetting & turn = HW_init
+ *		then
+ *			it_state ≔ it_waiting_hdp
+ *
+ *		//If software clears the HDP register, as is done by the open function.
+ *		if it_state = it_waiting_hdp & next(HDP) = 0b1_0 &
+ *			open_state = open_clear_hdp & next(open_state) = open_clear_queue &
+ *			turn = software
+ *		then
+ *			it_state ≔ it_idle
+ *
+ *	global variable updates (relevant to several parts of the transmitter model):
+ *	-RESET:
+ *		if it_state = it_resetting & turn = HW_init
+ *		then
+ *			RESET ≔ 0b1_0
+ */
+
+/*
+ *	Transmission
+ *
+ *	Transmission works as follows. To transmit a set of frames (data buffers),
+ *	first write a set of unused buffer descriptors with data about the frames
+ *	(its address and number of bytes) in the transmitter memory. The buffer
+ *	descriptors are linked into a queue by writing the address of the following
+ *	buffer descriptor in the next descriptor pointer field of the previous
+ *	buffer descriptor. The last buffer descriptor has a next descriptor pointer
+ *	field equal to zero.
+ *
+ *	The addressed data buffers must be located in RAM: [0x8000000, RAM_END).
+ *
+ *	If initialization, transmission and teardown are all idle, write HDP with
+ *	the address of the first buffer descriptor. The transmitter will transmit
+ *	all frames in the order of their corresponding buffer descriptors.
+ *
+ *	Writing HDP to any value except zero during initialization is an error.
+ *	Writing HDP when initialization, transmission or teardown are not idle, is
+ *	an error.
+ *
+ *	A buffer descriptor queue currently being processed by the transmitter can
+ *	be extended by writing the next descriptor pointer of the last buffer
+ *	descriptor with the address of the first buffer descriptor of the
+ *	extension.
+ *
+ *	The ownership bit shall be set by the software, and is cleared by the
+ *	transmitter when the transmitter has finished its processing of that frame.
+ *
+ *	The end of queue bit shall be cleared by the software and is set by the
+ *	transmitter if the current buffer descriptor is last in the queue (its next
+ *	descriptor pointer is equal to zero).
+ *
+ *	It is an error if the buffer length field is zero.
+ *
+ *	A buffer descriptor must be located on a four byte boundary (that is, the
+ *	two least significant bits of its address must be zero).
+ *
+ *	A misqueue condition occurs when the software extended the queue just after
+ *	the transmitter read the previously last buffer descriptor, then the
+ *	buffers addressed by the buffer descriptors in the extension will not be
+ *	transmitted.
+ *	Software detects a misqueue condition by reading the previously last buffer
+ *	descriptor and its ownership bit is cleared, end of queue bit is set and
+ *	its next descriptor pointer is not zero. Software rectifies this by writing
+ *	HDP with the address of the first buffer descriptor in the extension.
+ *
+ *	State components:
+ *	-tx_state : {tx_idle, tx_fetching_bd, tx_reading_memory,
+ *		tx_setting_eoq_or_releasing_bd, tx_releasing_bd}, initial value is
+ *		tx_idle:
+ *		#tx_idle: No transmission is active.
+ *		#tx_fetching_bd: Reads the buffer descriptor at HDP.
+ *		#tx_reading_memory: Reads the data buffer in RAM that is to be
+ *		 transmitted.
+ *		#tx_setting_eoq_or_releasing_bd: Sets the end of queue bit in current
+ *		 buffer descriptor if the current buffer descriptor is the last buffer
+ *		 descriptor, otherwise the current buffer descriptor is released.
+ *		#tx_releasing_bd: Releases the current buffer descriptor and clears
+ *		 HDP.
+ */
+
+//Macros:
+TX_BUFFER_OVERFLOW ≔ HW_MEMORY_BP[HDP] + HW_MEMORY_BL[HDP] < HW_MEMORY_BP[HDP]
+TX_BUFFER_INSIDE_RAM ≔ RAM_START <= HW_MEMORY_BP[HDP] &
+	HW_MEMORY_BP[HDP] + HW_MEMORY_BL[HDP] - 0b2_01 <= RAM_END
+
+transmission_step()
+	if (tx_state = tx_idle)
+		return
+	else if (tx_state = tx_fetching_bd)
+		if (HW_MEMORY_OWN[HDP] = 0b1_0 | HW_MEMORY_EOQ[HDP] = 0b1_1 |
+			HW_MEMORY_BL[HDP] = 0b2_00 | TX_BUFFER_OVERFLOW |
+			!TX_BUFFER_INSIDE_RAM)
+			dead ≔ true
+		else
+			tx_state ≔ tx_reading_memory
+	else if (tx_state = tx_reading_memory)
+		tx_state ≔ tx_setting_eoq_or_releasing_bd
+	else if (tx_state = tx_setting_eoq_or_releasing_bd)
+		if (HW_MEMORY_NDP[HDP] = 0b2_00)
+			HW_MEMORY_EOQ[HDP] ≔ 0b1_1
+			tx_state ≔ tx_releasing_bd
+		else
+			HW_MEMORY_OWN[HDP] ≔ 0b1_0
+			HDP ≔ HW_MEMORY_NDP[HDP]
+			if (td_state = td_waiting_for_tx)
+				tx_state ≔ tx_idle
+			else
+				tx_state ≔ tx_fetching_bd
+	else if (tx_state = tx_releasing_bd)
+			HW_MEMORY_OWN[HDP] ≔ 0b1_0
+			HDP ≔ 0b2_00
+			tx_state ≔ tx_idle
+
+
+/*
+ *	local variable updates:
+ *	-tx_state:
+ *		//The software writes the HDP register.
+ *		if tx_state = tx_idle & HDP = 0b2_00 & next(HDP) != 0b2_00 &
+ *			turn = software
+ *		then
+ *			tx_state ≔ tx_fetching_bd
+ *
+ *		if tx_state = tx_fetching_bd &
+ *			!(HW_MEMORY_OWN[HDP] = 0b1_0 | HW_MEMORY_EOQ[HDP] = 0b1_1 |
+ *				HW_MEMORY_BL[HDP] = 0b1_0 | TX_BUFFER_OVERFLOW |
+ *				!TX_BUFFER_INSIDE_RAM) &
+ *			turn = HW_tx
+ *		then
+ *			tx_state ≔ tx_reading_memory
+ *
+ *		if tx_state = tx_reading_memory & turn = HW_tx
+ *		then
+ *			tx_state ≔ tx_setting_eoq_or_releasing_bd
+ *
+ *		if tx_state = tx_setting_eoq_or_releasing_bd &
+ *			HW_MEMORY_NDP[HDP] = 0b2_00 & turn = HW_tx
+ *		then
+ *			tx_state ≔ tx_releasing_bd
+ *
+ *		if tx_state = tx_setting_eoq_or_releasing_bd &
+ *			HW_MEMORY_NDP[HDP] != 0b2_00 & td_state = td_waiting_for_tx &
+ *			turn = HW_tx
+ *		then
+ *			tx_state ≔ tx_idle
+ *
+ *		if tx_state = tx_setting_eoq_or_releasing_bd &
+ *			HW_MEMORY_NDP[HDP] != 0b2_00 & td_state != td_waiting_for_tx &
+ *			turn = HW_tx
+ *		then
+ *			tx_state ≔ tx_fetching_bd
+ *
+ *		if tx_state = tx_releasing_bd & turn = HW_tx
+ *		then
+ *			tx_state ≔ tx_idle
+ *
+ *	global variable updates:
+ *	-dead
+ *		if tx_state = tx_fetching_bd &
+ *		   (HW_MEMORY_OWN[HDP] = 0b1_0 | HW_MEMORY_EOQ[HDP] = 0b1_1 |
+ *			HW_MEMORY_BL[HDP] = 0b2_00 | TX_BUFFER_OVERFLOW |
+ *			!TX_BUFFER_INSIDE_RAM) &
+ *		   turn = HW_tx
+ *		then
+ *			dead ≔ TRUE
+ *
+ *	-HW_MEMORY
+ *		if tx_state = tx_setting_eoq_or_releasing_bd &
+ *			HW_MEMORY_NDP[HDP] = 0b2_00 & turn = HW_tx
+ *		then
+ *			HW_MEMORY_EOQ[HDP] ≔ 0b1_1
+ *
+ *		if tx_state = tx_setting_eoq_or_releasing_bd &
+ *			HW_MEMORY_NDP[HDP].ndp != 0b2_00 & turn = HW_tx
+ *		then
+ *			HW_MEMORY_OWN[HDP] ≔ 0b1_0
+ *
+ *		if tx_state = tx_releasing_bd & turn = HW_tx
+ *		then
+ *			HW_MEMORY_OWN[HDP] ≔ 0b1_0
+ *
+ *	-HDP
+ *		if tx_state = tx_setting_eoq_or_releasing_bd &
+ *			HW_MEMORY_NDP[HDP] != 02_00 & turn = HW_tx
+ *		then
+ *			HDP ≔ HW_MEMORY_NDP[HDP]
+ *
+ *		if tx_state = tx_releasing_bd & turn = HW_tx
+ *		then
+ *			HDP ≔ 0b2_00
+ */
+
+
+
+/*
+ *	Teardown
+ *
+ *	Teardown is used to turn off transmission and works as follows. To initiate
+ *	teardown, write 1 to TEARDOWN. The transmitter finishes the transmission of
+ *	the currently transmitted frame. If there are additional frames to
+ *	transmit, the transmitter will set the end of queue bit in the first buffer
+ *	descriptor following the buffer descriptor of the last transmitted frame
+ *	and clear its ownership bit. The HDP register is also cleared. Finally,
+ *	TEARDOWN is cleared.
+ *
+ *	Initiating teardown when an initialization or a teardown is under progress
+ *	is an error.
+ *
+ *	State components:
+ *	-td_state : {td_idle, td_waiting_for_tx, td_releasing_bd, td_clearing_td},
+ *	 initial value idle:
+ *		#td_idle: Teardown is idle.
+ *		#td_waiting_for_tx: The teardown operations are waiting for
+ *		 transmission to finish the transmission of the currently transmitted
+ *		 frame. Then it clears the TEARDOWN register or sets the end of queue
+ *		 bit in the current head of the buffer descriptor queue.
+ *		#td_releasing_bd: Releases the current buffer descriptor.
+ *		#td_clearing_td: Clears the TEARDOWN register and the goes to idle.
+ */
+teardown_step()
+	if (td_state = td_idle)
+		return
+	else if (td_state = td_waiting_for_tx & tx_state != tx_idle)
+		return
+	else if (td_state = td_waiting_for_tx & tx_state = tx_idle)
+		if (HDP = 0b2_00)
+			TEARDOWN ≔ 0b1_0
+			td_state ≔ td_idle
+		else
+			HW_MEMORY_EOQ[HDP] ≔ 0b1_1
+			td_state ≔ td_releasing_bd
+	else if (td_state = td_releasing_bd)
+		HW_MEMORY_OWN[HDP] ≔ 0b1_0
+		HDP ≔ 0b2_00
+		td_state ≔ td_clearing_td
+	else if (td_state = td_clearing_td)
+		TEARDOWN ≔ 0b1_0
+		td_state ≔ td_idle
+
+/*
+ *	local variable updates:
+ *	-state:
+ *		//If software activates teardown.
+ *		if td_state = td_idle & TEARDOWN = 0b1_0 & next(TEARDOWN) = 0b1_1 &
+ *			turn = software
+ *		then
+ *			td_state ≔ td_waiting_for_tx
+ *
+ *		if td_state = td_waiting_for_tx & tx_state = tx_idle & HDP = 0b2_00 &
+ *			turn = HW_td
+ *		then
+ *			td_state ≔ td_idle
+ *
+ *		if td_state = td_waiting_for_tx & tx_state = tx_idle & HDP != 0b2_00 &
+ *			turn = HW_td
+ *		then
+ *			td_state ≔ td_releasing_bd
+ *
+ *		if td_state = td_releasing_bd & turn = HW_td
+ *		then
+ *			td_state ≔ td_clearing_td
+ *
+ *		if td_state = td_clearing_td & turn = HW_td
+ *		then
+ *			td_state ≔ td_idle
+ *
+ *	global variable updates:
+ *	-TEARDOWN
+ *		if td_state = td_waiting_for_tx & tx_state = tx_idle & HDP = 0b2_00 &
+ *			turn = HW_td
+ *		then
+ *			TEARDOWN ≔ 0b1_0
+ *
+ *		if td_state = td_clearing_td & turn = HW_td
+ *		then
+ *			TEARDOWN ≔ 0b1_0
+ *
+ *	-HW_MEMORY
+ *		if td_state = td_waiting_for_tx & tx_state = tx_idle & HDP != 0b2_00 &
+ *			turn = HW_td
+ *		then
+ *			HW_MEMORY_EOQ[HDP] ≔ 0b1_1
+ *
+ *		if td_state = td_releasing_bd & turn = HW_td
+ *		then
+ *			HW_MEMORY_OWN[HDP] ≔ 0b1_0
+ *	-HDP
+ *		if td_state = td_releasing_bd & turn = HW_td
+ *		then
+ *			HDP ≔ 0b2_00
+ */

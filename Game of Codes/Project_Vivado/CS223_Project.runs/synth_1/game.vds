@@ -1,0 +1,563 @@
+#-----------------------------------------------------------
+# Vivado v2017.2 (64-bit)
+# SW Build 1909853 on Thu Jun 15 18:39:09 MDT 2017
+# IP Build 1909766 on Thu Jun 15 19:58:00 MDT 2017
+# Start of session at: Sun Dec 17 15:05:08 2017
+# Process ID: 4816
+# Current directory: D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.runs/synth_1
+# Command line: vivado.exe -log game.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source game.tcl
+# Log file: D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.runs/synth_1/game.vds
+# Journal file: D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.runs/synth_1\vivado.jou
+#-----------------------------------------------------------
+source game.tcl -notrace
+Command: synth_design -top game -part xc7a35tcpg236-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35t-cpg236'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35t-cpg236'
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 11316 
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 308.824 ; gain = 78.121
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'game' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/game.sv:23]
+INFO: [Synth 8-638] synthesizing module 'idle_detector_4bit' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/idle_detector_4bit.sv:23]
+INFO: [Synth 8-256] done synthesizing module 'idle_detector_4bit' (1#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/idle_detector_4bit.sv:23]
+INFO: [Synth 8-638] synthesizing module 'signal_delayer_1bit' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/signal_delayer_1bit.sv:23]
+INFO: [Synth 8-256] done synthesizing module 'signal_delayer_1bit' (2#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/signal_delayer_1bit.sv:23]
+INFO: [Synth 8-638] synthesizing module 'posedge_detector' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/posedge_detector.sv:23]
+INFO: [Synth 8-256] done synthesizing module 'posedge_detector' (3#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/posedge_detector.sv:23]
+INFO: [Synth 8-638] synthesizing module 'negedge_detector' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/negedge_detector.sv:23]
+INFO: [Synth 8-256] done synthesizing module 'negedge_detector' (4#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/negedge_detector.sv:23]
+INFO: [Synth 8-638] synthesizing module 'keypad4X4' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/keypad4X4.sv:25]
+INFO: [Synth 8-638] synthesizing module 'LUT4' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b1010101010101011 
+INFO: [Synth 8-256] done synthesizing module 'LUT4' (5#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT2' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+	Parameter INIT bound to: 4'b0010 
+INFO: [Synth 8-256] done synthesizing module 'LUT2' (6#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+INFO: [Synth 8-638] synthesizing module 'FDRE' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:3964]
+	Parameter INIT bound to: 1'b1 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+INFO: [Synth 8-256] done synthesizing module 'FDRE' (7#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:3964]
+INFO: [Synth 8-638] synthesizing module 'FDRE__parameterized0' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:3964]
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+INFO: [Synth 8-256] done synthesizing module 'FDRE__parameterized0' (7#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:3964]
+INFO: [Synth 8-638] synthesizing module 'GND' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:4942]
+INFO: [Synth 8-256] done synthesizing module 'GND' (8#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:4942]
+INFO: [Synth 8-638] synthesizing module 'VCC' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:45038]
+INFO: [Synth 8-256] done synthesizing module 'VCC' (9#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:45038]
+INFO: [Synth 8-638] synthesizing module 'LUT3' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+	Parameter INIT bound to: 8'b10000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT3' (10#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+INFO: [Synth 8-638] synthesizing module 'LUT6' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+	Parameter INIT bound to: 64'b1000000000000000000000000000000000000000000000000000000000000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT6' (11#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+INFO: [Synth 8-638] synthesizing module 'LUT5' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+	Parameter INIT bound to: 32'b10000000000000000000000000000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT5' (12#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+INFO: [Synth 8-638] synthesizing module 'LUT6__parameterized0' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+	Parameter INIT bound to: 64'b0000000000000000100000000000000000000000000000000000000000000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT6__parameterized0' (12#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+INFO: [Synth 8-638] synthesizing module 'LUT6__parameterized1' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+	Parameter INIT bound to: 64'b0000000000000000000000000000000000000000000000000000000000000001 
+INFO: [Synth 8-256] done synthesizing module 'LUT6__parameterized1' (12#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+INFO: [Synth 8-638] synthesizing module 'LUT5__parameterized0' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+	Parameter INIT bound to: 32'b00000000000000000000000000000001 
+INFO: [Synth 8-256] done synthesizing module 'LUT5__parameterized0' (12#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+INFO: [Synth 8-638] synthesizing module 'LUT1' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20458]
+	Parameter INIT bound to: 2'b01 
+INFO: [Synth 8-256] done synthesizing module 'LUT1' (13#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20458]
+INFO: [Synth 8-638] synthesizing module 'LUT2__parameterized0' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+	Parameter INIT bound to: 4'b0110 
+INFO: [Synth 8-256] done synthesizing module 'LUT2__parameterized0' (13#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+INFO: [Synth 8-638] synthesizing module 'LUT3__parameterized0' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+	Parameter INIT bound to: 8'b01111000 
+INFO: [Synth 8-256] done synthesizing module 'LUT3__parameterized0' (13#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized0' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b0111111110000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized0' (13#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT5__parameterized1' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+	Parameter INIT bound to: 32'b01111111111111111000000000000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT5__parameterized1' (13#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+INFO: [Synth 8-638] synthesizing module 'LUT6__parameterized2' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+	Parameter INIT bound to: 64'b1111011011111111111111111111011011110000111100001111000011110000 
+INFO: [Synth 8-256] done synthesizing module 'LUT6__parameterized2' (13#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+INFO: [Synth 8-638] synthesizing module 'LUT2__parameterized1' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+	Parameter INIT bound to: 4'b1000 
+INFO: [Synth 8-256] done synthesizing module 'LUT2__parameterized1' (13#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+INFO: [Synth 8-638] synthesizing module 'LUT6__parameterized3' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+	Parameter INIT bound to: 64'b0111111111111111111111111111111110000000000000000000000000000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT6__parameterized3' (13#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+INFO: [Synth 8-638] synthesizing module 'LUT6__parameterized4' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+	Parameter INIT bound to: 64'b0111110111111111111111110111110100000000000000000000000000000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT6__parameterized4' (13#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+INFO: [Synth 8-638] synthesizing module 'LUT6__parameterized5' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+	Parameter INIT bound to: 64'b0111111111111111111111111111111111111111111111111111111111111111 
+INFO: [Synth 8-256] done synthesizing module 'LUT6__parameterized5' (13#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+INFO: [Synth 8-638] synthesizing module 'CARRY4' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:961]
+INFO: [Synth 8-256] done synthesizing module 'CARRY4' (14#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:961]
+WARNING: [Synth 8-689] width (1) of port connection 'O' does not match port width (4) of module 'CARRY4' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/keypad4X4.sv:523]
+WARNING: [Synth 8-350] instance 'count_reg[16]_i_1' of module 'CARRY4' requires 6 connections, but only 5 given [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/keypad4X4.sv:519]
+INFO: [Synth 8-638] synthesizing module 'LUT3__parameterized1' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+	Parameter INIT bound to: 8'b11111110 
+INFO: [Synth 8-256] done synthesizing module 'LUT3__parameterized1' (14#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized1' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b0111111111111111 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized1' (14#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized2' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b0010000010101010 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized2' (14#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized3' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b0010101000000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized3' (14#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT2__parameterized2' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+	Parameter INIT bound to: 4'b1110 
+INFO: [Synth 8-256] done synthesizing module 'LUT2__parameterized2' (14#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+INFO: [Synth 8-256] done synthesizing module 'keypad4X4' (15#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/keypad4X4.sv:25]
+INFO: [Synth 8-638] synthesizing module 'key_mapper' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/mapper_module.sv:23]
+INFO: [Synth 8-226] default block is never used [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/mapper_module.sv:38]
+INFO: [Synth 8-256] done synthesizing module 'key_mapper' (16#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/mapper_module.sv:23]
+INFO: [Synth 8-638] synthesizing module 'rng_4bit' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/rng_4bit.sv:23]
+INFO: [Synth 8-256] done synthesizing module 'rng_4bit' (17#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/rng_4bit.sv:23]
+INFO: [Synth 8-638] synthesizing module 'movement_memory' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/movement_memory.sv:23]
+INFO: [Synth 8-256] done synthesizing module 'movement_memory' (18#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/movement_memory.sv:23]
+INFO: [Synth 8-638] synthesizing module 'steppermotor_wrapper' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/steppermotor_wrapper.sv:23]
+INFO: [Synth 8-638] synthesizing module 'LUT6__parameterized6' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+	Parameter INIT bound to: 64'b1100110011110011000000001111001111011101111100110001000111110011 
+INFO: [Synth 8-256] done synthesizing module 'LUT6__parameterized6' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+INFO: [Synth 8-638] synthesizing module 'LUT6__parameterized7' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+	Parameter INIT bound to: 64'b1111111111111111111111111111111111111111111111111111111111111110 
+INFO: [Synth 8-256] done synthesizing module 'LUT6__parameterized7' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+INFO: [Synth 8-638] synthesizing module 'LUT2__parameterized3' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+	Parameter INIT bound to: 4'b0001 
+INFO: [Synth 8-256] done synthesizing module 'LUT2__parameterized3' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized4' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b1000000000001000 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized4' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT2__parameterized4' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+	Parameter INIT bound to: 4'b1011 
+INFO: [Synth 8-256] done synthesizing module 'LUT2__parameterized4' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized5' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b1111111111111101 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized5' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized6' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b0001000000000100 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized6' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized7' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b0000000000100100 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized7' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized8' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b0000100010000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized8' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT3__parameterized2' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+	Parameter INIT bound to: 8'b00000001 
+INFO: [Synth 8-256] done synthesizing module 'LUT3__parameterized2' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+INFO: [Synth 8-638] synthesizing module 'LUT5__parameterized2' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+	Parameter INIT bound to: 32'b11111111111111111111111111111110 
+INFO: [Synth 8-256] done synthesizing module 'LUT5__parameterized2' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized9' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b1000000001000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized9' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized10' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b0000000000010100 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized10' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT5__parameterized3' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+	Parameter INIT bound to: 32'b11111111111111111011111111111111 
+INFO: [Synth 8-256] done synthesizing module 'LUT5__parameterized3' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+INFO: [Synth 8-638] synthesizing module 'LUT3__parameterized3' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+	Parameter INIT bound to: 8'b11110111 
+INFO: [Synth 8-256] done synthesizing module 'LUT3__parameterized3' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+INFO: [Synth 8-638] synthesizing module 'LUT3__parameterized4' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+	Parameter INIT bound to: 8'b11111101 
+INFO: [Synth 8-256] done synthesizing module 'LUT3__parameterized4' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+WARNING: [Synth 8-350] instance 'count_reg[28]_i_11' of module 'CARRY4' requires 6 connections, but only 5 given [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/steppermotor_wrapper.sv:581]
+WARNING: [Synth 8-350] instance 'count_reg[28]_i_14' of module 'CARRY4' requires 6 connections, but only 5 given [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/steppermotor_wrapper.sv:587]
+WARNING: [Synth 8-689] width (3) of port connection 'CO' does not match port width (4) of module 'CARRY4' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/steppermotor_wrapper.sv:595]
+WARNING: [Synth 8-350] instance 'count_reg[28]_i_20' of module 'CARRY4' requires 6 connections, but only 5 given [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/steppermotor_wrapper.sv:600]
+WARNING: [Synth 8-350] instance 'count_reg[28]_i_25' of module 'CARRY4' requires 6 connections, but only 5 given [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/steppermotor_wrapper.sv:606]
+WARNING: [Synth 8-689] width (2) of port connection 'CO' does not match port width (4) of module 'CARRY4' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/steppermotor_wrapper.sv:614]
+WARNING: [Synth 8-350] instance 'count_reg[28]_i_4' of module 'CARRY4' requires 6 connections, but only 5 given [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/steppermotor_wrapper.sv:612]
+WARNING: [Synth 8-689] width (2) of port connection 'CO' does not match port width (4) of module 'CARRY4' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/steppermotor_wrapper.sv:620]
+WARNING: [Synth 8-350] instance 'count_reg[28]_i_5' of module 'CARRY4' requires 6 connections, but only 5 given [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/steppermotor_wrapper.sv:618]
+INFO: [Synth 8-638] synthesizing module 'LUT5__parameterized4' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+	Parameter INIT bound to: 32'b10111000111111111011100000000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT5__parameterized4' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+INFO: [Synth 8-638] synthesizing module 'LUT6__parameterized8' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+	Parameter INIT bound to: 64'b0000000000000000111111111111111100010001111100000001000111110000 
+INFO: [Synth 8-256] done synthesizing module 'LUT6__parameterized8' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+INFO: [Synth 8-638] synthesizing module 'LUT3__parameterized5' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+	Parameter INIT bound to: 8'b01101100 
+INFO: [Synth 8-256] done synthesizing module 'LUT3__parameterized5' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+INFO: [Synth 8-638] synthesizing module 'LUT3__parameterized6' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+	Parameter INIT bound to: 8'b10111000 
+INFO: [Synth 8-256] done synthesizing module 'LUT3__parameterized6' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+INFO: [Synth 8-638] synthesizing module 'stepmotor' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/stepmotor.sv:23]
+INFO: [Synth 8-638] synthesizing module 'LUT3__parameterized7' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+	Parameter INIT bound to: 8'b01110100 
+INFO: [Synth 8-256] done synthesizing module 'LUT3__parameterized7' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20530]
+INFO: [Synth 8-638] synthesizing module 'LUT5__parameterized5' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+	Parameter INIT bound to: 32'b10010110111111111001011000000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT5__parameterized5' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+INFO: [Synth 8-638] synthesizing module 'LUT5__parameterized6' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+	Parameter INIT bound to: 32'b00000000000000001000000000000000 
+INFO: [Synth 8-256] done synthesizing module 'LUT5__parameterized6' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20618]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized11' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b1000000000000001 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized11' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized12' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b1001000000001001 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized12' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+WARNING: [Synth 8-689] width (3) of port connection 'CO' does not match port width (4) of module 'CARRY4' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/stepmotor.sv:308]
+WARNING: [Synth 8-350] instance 'count_reg[0]_i_1' of module 'CARRY4' requires 6 connections, but only 5 given [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/stepmotor.sv:306]
+WARNING: [Synth 8-350] instance 'count_reg[0]_i_4' of module 'CARRY4' requires 6 connections, but only 5 given [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/stepmotor.sv:319]
+WARNING: [Synth 8-689] width (3) of port connection 'CO' does not match port width (4) of module 'CARRY4' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/stepmotor.sv:390]
+INFO: [Synth 8-638] synthesizing module 'LUT2__parameterized5' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+	Parameter INIT bound to: 4'b1001 
+INFO: [Synth 8-256] done synthesizing module 'LUT2__parameterized5' (18#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+INFO: [Synth 8-256] done synthesizing module 'stepmotor' (19#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/stepmotor.sv:23]
+INFO: [Synth 8-256] done synthesizing module 'steppermotor_wrapper' (20#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/steppermotor_wrapper.sv:23]
+INFO: [Synth 8-638] synthesizing module 'seven_segment_logic' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/seven_segment_logic.sv:23]
+INFO: [Synth 8-638] synthesizing module 'SevSeg_4digit' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/SevSeg_4digit.sv:39]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized13' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b0010000010010100 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized13' (20#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT6__parameterized9' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+	Parameter INIT bound to: 64'b1111000010101010111111111100110011110000101010100000000011001100 
+INFO: [Synth 8-256] done synthesizing module 'LUT6__parameterized9' (20#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20668]
+INFO: [Synth 8-638] synthesizing module 'LUT2__parameterized6' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+	Parameter INIT bound to: 4'b0111 
+INFO: [Synth 8-256] done synthesizing module 'LUT2__parameterized6' (20#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20492]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized14' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b1010110001001000 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized14' (20#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized15' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b1010001000010000 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized15' (20#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+WARNING: [Synth 8-689] width (1) of port connection 'CO' does not match port width (4) of module 'CARRY4' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/SevSeg_4digit.sv:314]
+WARNING: [Synth 8-689] width (2) of port connection 'O' does not match port width (4) of module 'CARRY4' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/SevSeg_4digit.sv:317]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized16' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b1100001000010100 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized16' (20#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized17' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b0101011100010000 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized17' (20#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized18' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b0101000110010000 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized18' (20#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-638] synthesizing module 'LUT4__parameterized19' [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+	Parameter INIT bound to: 16'b0100000000100101 
+INFO: [Synth 8-256] done synthesizing module 'LUT4__parameterized19' (20#1) [D:/Xilinx/Vivado/2017.2/scripts/rt/data/unisim_comp.v:20572]
+INFO: [Synth 8-256] done synthesizing module 'SevSeg_4digit' (21#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_files/Ready_Modules/SevSeg_4digit.sv:39]
+INFO: [Synth 8-256] done synthesizing module 'seven_segment_logic' (22#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/seven_segment_logic.sv:23]
+INFO: [Synth 8-256] done synthesizing module 'game' (23#1) [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/game.sv:23]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 348.902 ; gain = 118.199
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 348.902 ; gain = 118.199
+---------------------------------------------------------------------------------
+INFO: [Netlist 29-17] Analyzing 30 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Device 21-403] Loading part xc7a35tcpg236-1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/constrs_1/new/constraints.xdc]
+Finished Parsing XDC File [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/constrs_1/new/constraints.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/constrs_1/new/constraints.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/game_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/game_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 649.863 ; gain = 0.000
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a35tcpg236-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-6014] Unused sequential element counter_reg was removed.  [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/signal_delayer_1bit.sv:41]
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     27 Bit       Adders := 1     
+	   2 Input      4 Bit       Adders := 2     
++---XORs : 
+	   2 Input      1 Bit         XORs := 8     
+	   4 Input      1 Bit         XORs := 2     
++---Registers : 
+	               27 Bit    Registers := 1     
+	                8 Bit    Registers := 2     
+	                4 Bit    Registers := 3     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   2 Input      4 Bit        Muxes := 3     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+Hierarchical RTL Component report 
+Module idle_detector_4bit 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     27 Bit       Adders := 1     
++---XORs : 
+	   2 Input      1 Bit         XORs := 4     
++---Registers : 
+	               27 Bit    Registers := 1     
+	                4 Bit    Registers := 1     
+Module signal_delayer_1bit 
+Detailed RTL Component Info : 
++---Registers : 
+	                1 Bit    Registers := 1     
+Module posedge_detector 
+Detailed RTL Component Info : 
++---Registers : 
+	                1 Bit    Registers := 1     
+Module negedge_detector 
+Detailed RTL Component Info : 
++---Registers : 
+	                1 Bit    Registers := 1     
+Module rng_4bit 
+Detailed RTL Component Info : 
++---XORs : 
+	   4 Input      1 Bit         XORs := 2     
++---Registers : 
+	                8 Bit    Registers := 2     
+Module movement_memory 
+Detailed RTL Component Info : 
++---Registers : 
+	                4 Bit    Registers := 1     
+Module seven_segment_logic 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input      4 Bit       Adders := 2     
++---XORs : 
+	   2 Input      1 Bit         XORs := 4     
++---Registers : 
+	                4 Bit    Registers := 1     
++---Muxes : 
+	   2 Input      4 Bit        Muxes := 3     
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 90 (col length:60)
+BRAMs: 100 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+INFO: [Synth 8-4471] merging register 'negedgeOfStart/in_delayed_reg' into 'posedgeOfStart/in_delayed_reg' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/negedge_detector.sv:34]
+INFO: [Synth 8-4471] merging register 'negedgeOfKeyValid/in_delayed_reg' into 'posedgeOfKeyValid/in_delayed_reg' [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/negedge_detector.sv:34]
+WARNING: [Synth 8-6014] Unused sequential element negedgeOfStart/in_delayed_reg was removed.  [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/negedge_detector.sv:34]
+WARNING: [Synth 8-6014] Unused sequential element negedgeOfKeyValid/in_delayed_reg was removed.  [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/negedge_detector.sv:34]
+WARNING: [Synth 8-6014] Unused sequential element initiateNextDelayer/counter_reg was removed.  [D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.srcs/sources_1/new/signal_delayer_1bit.sv:41]
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-------+------+
+|      |Cell   |Count |
++------+-------+------+
+|1     |BUFG   |     1|
+|2     |CARRY4 |    44|
+|3     |LUT1   |    61|
+|4     |LUT2   |    48|
+|5     |LUT3   |    21|
+|6     |LUT4   |    42|
+|7     |LUT5   |    20|
+|8     |LUT6   |    25|
+|9     |FDRE   |   158|
+|10    |FDSE   |    56|
+|11    |IBUF   |     7|
+|12    |OBUF   |    26|
++------+-------+------+
+
+Report Instance Areas: 
++------+----------------------+---------------------+------+
+|      |Instance              |Module               |Cells |
++------+----------------------+---------------------+------+
+|1     |top                   |                     |   509|
+|2     |  keypad              |keypad4X4            |    83|
+|3     |  motorControl        |steppermotor_wrapper |   144|
+|4     |    stepmotor_inst0   |stepmotor            |    54|
+|5     |  initiateNextDelayer |signal_delayer_1bit  |    73|
+|6     |  motorIdleModule     |idle_detector_4bit   |   101|
+|7     |  motorMemory         |movement_memory      |     6|
+|8     |  posedgeOfKeyValid   |posedge_detector     |     1|
+|9     |  posedgeOfStart      |posedge_detector_0   |     2|
+|10    |  rndNumGenerator     |rng_4bit             |    18|
+|11    |  sevSegDisplay       |seven_segment_logic  |    47|
+|12    |    sevSegController  |SevSeg_4digit        |    39|
++------+----------------------+---------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 649.863 ; gain = 419.160
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 4 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:14 ; elapsed = 00:00:18 . Memory (MB): peak = 649.863 ; gain = 118.199
+Synthesis Optimization Complete : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 649.863 ; gain = 419.160
+INFO: [Project 1-571] Translating synthesized netlist
+INFO: [Netlist 29-17] Analyzing 51 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+168 Infos, 21 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:24 ; elapsed = 00:00:25 . Memory (MB): peak = 649.863 ; gain = 426.930
+INFO: [Common 17-1381] The checkpoint 'D:/Documents/Bilkent/Year 2 Semester 1/CS223/Project/Project_Vivado/CS223_Project.runs/synth_1/game.dcp' has been generated.
+report_utilization: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.048 . Memory (MB): peak = 649.863 ; gain = 0.000
+INFO: [Common 17-206] Exiting Vivado at Sun Dec 17 15:05:36 2017...
