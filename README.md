@@ -10,27 +10,35 @@ from Kungliga Tekniska högskolan where I took graduate level courses.
 The coursework will be labeled and explained in the following.
 
 ### Coursework from Bilkent University
-- CS102: Introduction to Programming II
+CS102: Introduction to Programming II
 * Periodic Table App: An educational Android app about the periodic table.
-- CS223: Digital Design
+
+CS223: Digital Design
 * Game of Codes: SystemVerilog implementation of a physical game about classification of random outputs through basic peripherals.
-- CS224: Computer Organization
+
+CS224: Computer Organization
 * Computer Organization Assignments: Assembly programs for MIPS architecture. Implementation of a MIPS CPU in SystemVerilog. Modification and extension of MIPS architecture.
-- CS315: Programming Languages
+
+CS315: Programming Languages
 * RoboScript: Design and compiler front-end development for a robotics scripting language. Use of lex and yacc.
-- CS319: Object Oriented Software Engineering
+
+CS319: Object Oriented Software Engineering
 * Qbitz: Software implementation of the tabletop game Qbitz with addition of new game modes and online multiplayer.
-- CS342: Operating Systems
+
+CS342: Operating Systems
 * Operating Systems Assignments: Introductory pair programming projects in Linux kernel and driver development.
-- CS365: Computer Graphics
+
+CS465: Computer Graphics
 * Computer Graphics Assignments: Introductory projects to WebGL and computer graphics concepts.
 
 ### Coursework from Kungliga Tekniska högskolan (Graduate Level)
-- DD2452: Formal Methods
+DD2452: Formal Methods
 * Formal Methods Homeworks: Exercises in formal verification theory.
 * Formal Methods Labs: Introductory projects to verification tools and software such as Frama-C and NuSMV.
-- DD2423: Image Analysis and Computer Vision
+
+DD2423: Image Analysis and Computer Vision
 * Image Analysis and Computer Vision Labs: Introductory projects to concepts such as filtering, edge detection and segmenting.
-- ID2209: Distributed Artifical Intelligence and Intelligent Agents
+
+ID2209: Distributed Artifical Intelligence and Intelligent Agents
 * Distributed AI and Intelligent Agents Assignments: Introductory projects to agent negotation, communication and coordination in GAMA.
 * Harvest Festival: Festival themed project that utilizes multiple types of agents and locations to create a complex simulation in GAMA.
